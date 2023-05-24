@@ -6,6 +6,9 @@ from webServer.service.persistentData import persistentData
 
 # Set up environment variable
 GRPC_SERVER = os.getenv('GRPC_SERVER')
+if GRPC_SERVER is None:
+    print("You must provide grpc server address")
+    exit()
 # GRPC_SERVER='localhost:9876'
 
 db = persistentData('webServer/db/persistentData.json')
