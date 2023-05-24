@@ -1,8 +1,9 @@
-videoServer/__pycache__/
-videoServer/service/__pycache__/
-videoServer/proto/__pycache__/
+videoServerApp/videoServer/__pycache__/
+videoServerApp/videoServer/service/__pycache__/
+videoServerApp/videoServer/proto/__pycache__/
+videoServerApp/.vscode
 
-webserver/__pycache__/
-webserver/service/__pycache__/
-webserver/proto/__pycache__/
-.vscode
+webServerApp/webserver/__pycache__/
+webServerApp/webserver/service/__pycache__/
+webServerApp/webserver/proto/__pycache__/
+webServerApp/.vscode

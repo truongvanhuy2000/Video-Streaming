@@ -1,0 +1,4 @@
+webserver/__pycache__/
+webserver/service/__pycache__/
+webserver/proto/__pycache__/
+.vscode

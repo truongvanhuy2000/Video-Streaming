@@ -1,0 +1,4 @@
+videoServer/__pycache__/
+videoServer/service/__pycache__/
+videoServer/proto/__pycache__/
+.vscode

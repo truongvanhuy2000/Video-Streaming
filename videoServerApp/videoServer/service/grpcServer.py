@@ -70,6 +70,7 @@ def startSocket():
     if sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT) == 0:
         raise RuntimeError("Failed to set SO_REUSEPORT.")
     sock.bind(('', _PORT_))
+    print(f"The server is listening on address: {sock.getsockname()[0]}:{sock.getsockname()[1]}")
     return sock.getsockname()[1]
 
 def setUpLogging():

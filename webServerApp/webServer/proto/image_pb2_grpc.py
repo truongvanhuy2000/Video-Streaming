@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from webserver.proto import image_pb2 as image__pb2
+from webServer.proto import image_pb2 as image__pb2
 
 
 class image_tranferStub(object):

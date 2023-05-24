@@ -1,16 +1,15 @@
 import grpc
-from webserver.proto import image_pb2, image_pb2_grpc
-
 import cv2
-import time
 
-from webserver.common.helper import deserializeTheImage
-def request(video, model, port):
+from webServer.proto import image_pb2, image_pb2_grpc
+from webServer.common.helper import deserializeTheImage
+
+def request(video, model, addr):
     channel_opt = [
             ("grpc.so_reuseport", 1),
             ("grpc.use_local_subchannel_pool", 1)
         ]
-    with grpc.insecure_channel('localhost:{}'.format(port), options=channel_opt) as channel:
+    with grpc.insecure_channel(addr, options=channel_opt) as channel:
         stub = image_pb2_grpc.image_tranferStub(channel=channel)
         response = stub.send_me_image(image_pb2.image_request(model=model, video=video))
         try:
