@@ -1,7 +1,7 @@
-./videoServer/__pycache__
-./videoServer/service/__pycache__
-./videoServer/proto/__pycache__
+videoServer/__pycache__
+videoServer/service/__pycache__
+videoServer/proto/__pycache__
 
-./webserver/__pycache__
-./webserver/service/__pycache__
-./webserver/proto/__pycache__
+webserver/__pycache__
+webserver/service/__pycache__
+webserver/proto/__pycache__
