@@ -1,0 +1,5 @@
+grpcio==1.54.2
+numpy==1.24.3
+opencv-python-headless==4.7.0.72
+protobuf==4.23.0
+pybase64==1.2.3
