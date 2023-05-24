@@ -69,7 +69,7 @@ def startSocket():
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     if sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT) == 0:
         raise RuntimeError("Failed to set SO_REUSEPORT.")
-    sock.bind(('0.0.0.0', _PORT_))
+    sock.bind(('', _PORT_))
     print(f"The server is listening on address: {sock.getsockname()[0]}:{sock.getsockname()[1]}")
     return sock.getsockname()[1]
 
@@ -84,7 +84,7 @@ def setUpLogging():
 def serve():
     setUpLogging()
     port = startSocket()
-    bind_address = 'localhost:{}'.format(port)
+    bind_address = '0.0.0.0:{}'.format(port)
     workers = []
     for _ in range(_PROCESS_COUNT):
         worker = multiprocessing.Process(target=runServer,

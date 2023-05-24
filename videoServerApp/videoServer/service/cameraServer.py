@@ -4,7 +4,7 @@ import cv2
 
 class camera_server():
     def __init__(self, video, model) -> None:
-        self.cap = cv2.VideoCapture('/home/huy/Videos/' + video + '.mp4')
+        self.cap = cv2.VideoCapture('videoServer/resources/' + video + '.mp4')
         self.AImodel = self.getModel(model)
 
     def getModel(self, model):
