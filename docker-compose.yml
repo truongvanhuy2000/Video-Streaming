@@ -6,25 +6,25 @@ services:
     restart: always
     networks:
       cat:
-        ipv4_address: 172.25.0.5
+        ipv4_address: 172.26.3.5
   videoserver2:
     image: "truongvanhuy2000/videoserverapp"
     restart: always
     networks:
       cat:
-        ipv4_address: 172.25.0.6
+        ipv4_address: 172.26.3.6
   videoserver3:
     image: "truongvanhuy2000/videoserverapp"
     restart: always
     networks:
       cat:
-        ipv4_address: 172.25.0.7
+        ipv4_address: 172.26.3.7
   videoserver4:
     image: "truongvanhuy2000/videoserverapp"
     restart: always
     networks:
       cat:
-        ipv4_address: 172.25.0.8
+        ipv4_address: 172.26.3.8
 
   webserver:
     image: "truongvanhuy2000/webserverapp"
@@ -37,11 +37,11 @@ services:
       - web.env
     networks:
       cat:
-        ipv4_address: 172.25.0.4
+        ipv4_address: 172.26.3.4
 
 networks:
   cat:
     ipam:
       driver: default
       config: 
-        - subnet: 172.25.0.0/16
+        - subnet: 172.26.3.0/24
