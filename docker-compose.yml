@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  videoserver1:
+    image: "truongvanhuy2000/videoserverapp"
+    restart: always
+    networks:
+      cat:
+        ipv4_address: 172.25.0.5
+  videoserver2:
+    image: "truongvanhuy2000/videoserverapp"
+    restart: always
+    networks:
+      cat:
+        ipv4_address: 172.25.0.6
+  videoserver3:
+    image: "truongvanhuy2000/videoserverapp"
+    restart: always
+    networks:
+      cat:
+        ipv4_address: 172.25.0.7
+  videoserver4:
+    image: "truongvanhuy2000/videoserverapp"
+    restart: always
+    networks:
+      cat:
+        ipv4_address: 172.25.0.8
+
+  webserver:
+    image: "truongvanhuy2000/webserverapp"
+    ports:
+      - "5000:5000"
+    restart: always
+    volumes:
+      - .:/webServerApp/webServer
+    env_file:
+      - web.env
+    networks:
+      cat:
+        ipv4_address: 172.25.0.4
+
+networks:
+  cat:
+    ipam:
+      driver: default
+      config: 
+        - subnet: 172.25.0.0/16

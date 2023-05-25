@@ -5,11 +5,14 @@ from webServer.service import grpcClient
 from webServer.service.persistentData import persistentData
 
 # Set up environment variable
-GRPC_SERVER = os.getenv('GRPC_SERVER')
-if GRPC_SERVER is None:
-    print("You must provide grpc server address")
+GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
+GRPC_SERVER2 = os.getenv('GRPC_SERVER2')
+GRPC_SERVER3 = os.getenv('GRPC_SERVER3')
+GRPC_SERVER4 = os.getenv('GRPC_SERVER4')
+
+if (GRPC_SERVER1 is None) and (GRPC_SERVER2 is None) and (GRPC_SERVER3 is None) and (GRPC_SERVER4 is None):
+    print("Missing environment variable")
     exit()
-# GRPC_SERVER='localhost:9876'
 
 db = persistentData('webServer/db/persistentData.json')
 app = Flask(__name__)
@@ -41,22 +44,22 @@ def index():
         
 @app.route('/<variable>/video_feed_one')
 def video_feed_one(variable):
-    return Response(grpcClient.request(video="video1", model=variable, addr=GRPC_SERVER),
+    return Response(grpcClient.request(video="video1", model=variable, addr=GRPC_SERVER1),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/<variable>/video_feed_two')
 def video_feed_two(variable):
-    return Response(grpcClient.request(video="video2", model=variable, addr=GRPC_SERVER),
+    return Response(grpcClient.request(video="video2", model=variable, addr=GRPC_SERVER2),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/<variable>/video_feed_three')
 def video_feed_three(variable):
-    return Response(grpcClient.request(video="video3", model=variable, addr=GRPC_SERVER),
+    return Response(grpcClient.request(video="video3", model=variable, addr=GRPC_SERVER3),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/<variable>/video_feed_four')
 def video_feed_four(variable):
-    return Response(grpcClient.request(video="video4", model=variable, addr=GRPC_SERVER),
+    return Response(grpcClient.request(video="video4", model=variable, addr=GRPC_SERVER4),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 def runWebServer():
     app.run(host="0.0.0.0", debug=False)
