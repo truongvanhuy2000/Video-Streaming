@@ -29,7 +29,7 @@ services:
   webserver:
     image: "truongvanhuy2000/webserverapp"
     ports:
-      - "6000:5000"
+      - "8000:5000"
     restart: always
     volumes:
       - .:/webServerApp/webServer
