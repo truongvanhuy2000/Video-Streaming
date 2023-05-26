@@ -5,7 +5,7 @@ import os
 
 class camera_server():
     def __init__(self, video, model) -> None:
-        dir = 'videoServer/sharedResources/' + video + '.mp4'
+        dir = 'videoServer/resources/' + video + '.mp4'
         self.cap = cv2.VideoCapture(dir)
         self.AImodel = self.getModel(model)
 
