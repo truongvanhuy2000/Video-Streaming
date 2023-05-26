@@ -40,7 +40,7 @@ services:
   #       ipv4_address: 172.26.3.4
 
   videoserver1:
-    build: videoServerApp/
+    image: truongvanhuy2000/videoserverapp
     networks:
       - cat
     depends_on:
@@ -50,7 +50,7 @@ services:
     privileged: true
 
   videoserver2:
-    build: videoServerApp/
+    image: truongvanhuy2000/videoserverapp
     networks:
       - cat
     depends_on:
@@ -60,7 +60,7 @@ services:
     privileged: true
 
   videoserver3:
-    build: videoServerApp/
+    image: truongvanhuy2000/videoserverapp
     networks:
       - cat
     depends_on:
@@ -70,7 +70,7 @@ services:
     privileged: true
         
   videoserver4:
-    build: videoServerApp/
+    image: truongvanhuy2000/videoserverapp
     networks:
       - cat
     depends_on:
@@ -80,7 +80,7 @@ services:
     privileged: true
 
   webserver:
-    build: webServerApp/
+    image: truongvanhuy2000/webserverapp
     ports:
       - "8000:5000"
     restart: unless-stopped
@@ -92,9 +92,10 @@ services:
       - cat
     depends_on:
       - nfsserver
+    
   
   nfsserver:
-    build: nfsServer
+    image: truongvanhuy2000/nfsserver
     container_name: nfsserver
     restart: unless-stopped
     privileged: true
