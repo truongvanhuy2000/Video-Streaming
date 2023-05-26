@@ -81,7 +81,7 @@ services:
     environment:
       - SHARED_DIRECTORY=/data/resources
     volumes:
-      - video:/data/resources
+      - video2:/data/resources
     networks:
       - cat
 
@@ -90,7 +90,7 @@ networks:
     ipam:
       driver: default
       config: 
-        - subnet: 172.26.3.0/24
+        - subnet: 172.22.3.0/24
 
 volumes:
   video:
@@ -99,3 +99,5 @@ volumes:
       type: nfs
       o: addr=nfsserver,nolock,soft,rw
       device: ":/data/resources"
+  video2:
+    driver: local
