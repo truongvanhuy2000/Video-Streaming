@@ -1,43 +1,109 @@
 version: "3"
 
 services:
+  # videoserver1:
+  #   image: "truongvanhuy2000/videoserverapp"
+  #   restart: always
+  #   networks:
+  #     cat:
+  #       ipv4_address: 172.26.3.5
+  # videoserver2:
+  #   image: "truongvanhuy2000/videoserverapp"
+  #   restart: always
+  #   networks:
+  #     cat:
+  #       ipv4_address: 172.26.3.6
+  # videoserver3:
+  #   image: "truongvanhuy2000/videoserverapp"
+  #   restart: always
+  #   networks:
+  #     cat:
+  #       ipv4_address: 172.26.3.7
+  # videoserver4:
+  #   image: "truongvanhuy2000/videoserverapp"
+  #   restart: always
+  #   networks:
+  #     cat:
+  #       ipv4_address: 172.26.3.8
+
+  # webserver:
+  #   image: "truongvanhuy2000/webserverapp"
+  #   ports:
+  #     - "8000:5000"
+  #   restart: always
+  #   volumes:
+  #     - .:/webServerApp/webServer
+  #   env_file:
+  #     - web.env
+  #   networks:
+  #     cat:
+  #       ipv4_address: 172.26.3.4
+
   videoserver1:
-    image: "truongvanhuy2000/videoserverapp"
-    restart: always
+    build: videoServerApp/
     networks:
-      cat:
-        ipv4_address: 172.26.3.5
+      - cat
+    depends_on:
+      - nfsserver
+    env_file:
+      - video.env
+    privileged: true
+
   videoserver2:
-    image: "truongvanhuy2000/videoserverapp"
-    restart: always
+    build: videoServerApp/
     networks:
-      cat:
-        ipv4_address: 172.26.3.6
+      - cat
+    depends_on:
+      - nfsserver
+    env_file:
+      - video.env
+    privileged: true
+
   videoserver3:
-    image: "truongvanhuy2000/videoserverapp"
-    restart: always
+    build: videoServerApp/
     networks:
-      cat:
-        ipv4_address: 172.26.3.7
+      - cat
+    depends_on:
+      - nfsserver
+    env_file:
+      - video.env
+    privileged: true
+        
   videoserver4:
-    image: "truongvanhuy2000/videoserverapp"
-    restart: always
+    build: videoServerApp/
     networks:
-      cat:
-        ipv4_address: 172.26.3.8
+      - cat
+    depends_on:
+      - nfsserver
+    env_file:
+      - video.env
+    privileged: true
 
   webserver:
-    image: "truongvanhuy2000/webserverapp"
+    build: webServerApp/
     ports:
       - "8000:5000"
-    restart: always
+    restart: unless-stopped
     volumes:
       - .:/webServerApp/webServer
     env_file:
       - web.env
     networks:
-      cat:
-        ipv4_address: 172.26.3.4
+      - cat
+    depends_on:
+      - nfsserver
+  
+  nfsserver:
+    build: nfsServer
+    container_name: nfsserver
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - SHARED_DIRECTORY=/data/resources
+    volumes:
+      - video:/data/resources
+    networks:
+      - cat
 
 networks:
   cat:
@@ -45,3 +111,6 @@ networks:
       driver: default
       config: 
         - subnet: 172.26.3.0/24
+
+volumes:
+  video:
