@@ -6,52 +6,60 @@ services:
     # build: videoServerApp
     networks:
       - cat
-    depends_on:
-      - nfsserver
     env_file:
       - video.env
     privileged: true
     volumes:
-      - "video:/video/"
+      - type: volume
+        source: nfsvolume
+        target: /video/
+        volume:
+          nocopy: true
 
   videoserver2:
     image: truongvanhuy2000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
-    depends_on:
-      - nfsserver
     env_file:
       - video.env
     privileged: true
     volumes:
-      - "video:/video/"
+      - type: volume
+        source: nfsvolume
+        target: /video/
+        volume:
+          nocopy: true
 
   videoserver3:
     image: truongvanhuy2000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
-    depends_on:
-      - nfsserver
     env_file:
       - video.env
     privileged: true
     volumes:
-      - "video:/video/"
+      - type: volume
+        source: nfsvolume
+        target: /video/
+        volume:
+          nocopy: true
         
   videoserver4:
     image: truongvanhuy2000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
-    depends_on:
-      - nfsserver
     env_file:
       - video.env
     privileged: true
     volumes:
-      - "video:/video/"
+      - type: volume
+        source: nfsvolume
+        target: /video/
+        volume:
+          nocopy: true
 
   webserver:
     image: truongvanhuy2000/webserverapp
@@ -65,39 +73,23 @@ services:
       - web.env
     networks:
       - cat
-    depends_on:
-      - nfsserver
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints: [node.role == manager]
 
-  nfsserver:
-    image: truongvanhuy2000/nfsserver
-    # build: nfsServer
-    restart: unless-stopped
-    privileged: true
-    environment:
-      - SHARED_DIRECTORY=/data/resources
-    volumes:
-      - video2:/data/resources
-    networks:
-      - cat
-
 networks:
   cat:
+    name: cat
     ipam:
       driver: default
-      config: 
-        - subnet: 172.22.3.0/24
 
 volumes:
-  video:
+  nfsvolume:
     driver: local
     driver_opts:
-      type: nfs
-      o: addr=nfsserver,nolock,soft,rw
-      device: ":/data/resources"
-  video2:
-    driver: local
+      type: nfs4
+      o: addr=127.0.0.1,nolock,soft
+      device: ":/home/huy/Videos"
+  
