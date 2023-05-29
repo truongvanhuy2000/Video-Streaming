@@ -2,8 +2,8 @@ version: "3"
 
 services:
   videoserver1:
-    image: truongvanhuy2000/videoserverapp
-    # build: videoServerApp
+    # image: truongvanhuy2000/videoserverapp
+    build: videoServerApp
     networks:
       - cat
     env_file:
@@ -17,8 +17,8 @@ services:
           nocopy: true
 
   videoserver2:
-    image: truongvanhuy2000/videoserverapp
-    # build: videoServerApp
+    # image: truongvanhuy2000/videoserverapp
+    build: videoServerApp
     networks:
       - cat
     env_file:
@@ -32,8 +32,8 @@ services:
           nocopy: true
 
   videoserver3:
-    image: truongvanhuy2000/videoserverapp
-    # build: videoServerApp
+    # image: truongvanhuy2000/videoserverapp
+    build: videoServerApp
     networks:
       - cat
     env_file:
@@ -47,8 +47,8 @@ services:
           nocopy: true
         
   videoserver4:
-    image: truongvanhuy2000/videoserverapp
-    # build: videoServerApp
+    # image: truongvanhuy2000/videoserverapp
+    build: videoServerApp
     networks:
       - cat
     env_file:
@@ -62,8 +62,8 @@ services:
           nocopy: true
 
   webserver:
-    image: truongvanhuy2000/webserverapp
-    # build: webServerApp
+    # image: truongvanhuy2000/webserverapp
+    build: webServerApp
     ports:
       - "8000:5000"
     restart: unless-stopped
@@ -90,6 +90,6 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=192.168.42.74,nfsvers=4.1,nolock,soft,rw"
+      o: "addr=192.168.42.143,nfsvers=4.1,nolock,soft,rw"
       device: ":home/huy/Videos"
   

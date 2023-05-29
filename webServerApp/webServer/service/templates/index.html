@@ -4,12 +4,14 @@
 
 {% block body %}
 <div id="main">
+  {% if status == "start" %}
     {% for index in range(views)%} 
     <div class="category-{{index}}">
         <h1>Video Streaming {{index}} {{model}}</h1>
         <img src="{{ url_for(video_feeds[index], variable=model) }}" width="640" height="320">
     </div>
     {% endfor %}
+  {% endif %}
 </div>
 <div class="container">
   <div class="choosingModelForm">
@@ -31,6 +33,13 @@
       </select>
       <input type="submit" value="Submit">
     </form>
+
+    <form action="/status" method="post">
+      <button name="action" value="start">Start</button>
+      <button name="action" value="stop">Stop</button>
+    </form>
+    
+  
   </div>
 
 </div>
