@@ -19,36 +19,35 @@ You must setup at least 2 virtual machines cause we gonna setup an swarm environ
 
 ## Installation
 1. Clone this repo
-* 
-  ```sh
-  git clone https://github.com/truongvanhuy2000/videoStreaming
-  ```
+ 
+        git clone https://github.com/truongvanhuy2000/videoStreaming
+
 2. Change the IP address and mount directory inside of the docker-compose file
-* 
-  ```sh
-  volumes:
-    nfsvolume:
-        driver: local
-        driver_opts:
-        type: "nfs"
-        o: "addr=<<NFS_SERVER_IP>>,nfsvers=4.1,nolock,soft,rw"
-        device: ":<<MOUNT_DIR>>"
-  ```
+
+        volumes:
+          nfsvolume:
+              driver: local
+              driver_opts:
+              type: "nfs"
+              o: "addr=<<NFS_SERVER_IP>>,nfsvers=4.1,nolock,soft,rw"
+              device: ":<<MOUNT_DIR>>"
+        
 3. Run the project
 
     There are 2 way you can run this project:
     
-    **Standlone mode**
+    + **Standlone mode**
 
     In this mode, you will run everything on a single machine
             
         docker compose up
     
-    **Docker Swarm mode**
+    + **Docker Swarm mode**
 
     In this mode, you will run everything on different machine
 
         docker stack deploy --compose-file docker-compose.yml demo
+
 4. Access the Website to view streamed video
 
     By default, the website will be bound to port 8000 of the machine that you ran the command on.
@@ -56,3 +55,27 @@ You must setup at least 2 virtual machines cause we gonna setup an swarm environ
         
         <ipaddress>:8000
     
+    **Website Layout**
+
+    I won't explain the functionality of the website so you should try to play around for a little bit.
+
+    ![Alt Text](./Image/Screenshot.png)
+
+## Project Structure
+
+### Top-level directory layout
+
+    .
+    ├── videoServerApp          # Source code for the video server
+    ├── webServerApp            # Source code for the web server
+    ├── ExampleVideo            # Some example video that's displayed on the website
+    ├── video.env               # Environment variable for video server
+    ├── web.env                 # Environment variable for web server
+    ├── .gitignore
+    ├── docker-compose.yml
+    └── README.md
+
+  Everything else is self explanatory so im gonna focus on the 2 main components that are **videoServerApp** and **webServerApp**.
+
+  + **videoServerApp**
+
