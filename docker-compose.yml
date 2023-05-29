@@ -89,7 +89,7 @@ volumes:
   nfsvolume:
     driver: local
     driver_opts:
-      type: nfs4
-      o: addr=$IP_ADDR,nolock,soft
-      device: $MOUNT_DIR
+      type: "nfs"
+      o: "addr=192.168.42.74,nfsvers=4.1,nolock,soft,rw"
+      device: ":home/huy/Videos"
   
