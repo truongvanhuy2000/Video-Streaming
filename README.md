@@ -1,4 +1,13 @@
 # Video Streaming Project
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+![Alt Text](./Image/Screenshot.png)
+
+This project is used for create a web server to display videos streamed from a video server. User can choose which model AI to use and how many video window that can be played simultaneously.
+
+This project is created for the purpose of learning only, so read this with the grain of salt. 
+
 ## Getting Started
 ### Prerequisites
 **NFS Server**
@@ -63,19 +72,55 @@ You must setup at least 2 virtual machines cause we gonna setup an swarm environ
 
 ## Project Structure
 
+In this part, i will talk briefly about the folder structure of this project and the functionality of its components.
+
 ### Top-level directory layout
+```sh
+.
+├── videoServerApp          # Source code for the video server
+├── webServerApp            # Source code for the web server
+├── ExampleVideo            # Some example video that's displayed on the website
+├── video.env               # Environment variable for video server, you can change protocol and mount directory here
+├── web.env                 # Environment variable for web server, you can used this to change the address of video server
+├── .gitignore
+├── docker-compose.yml
+└── README.md
+```
+  Everything else is self explanatory so im gonna focus on the 2 main components that are **videoServerApp** and **webServerApp**. They are mostly similar in term of components
 
-    .
-    ├── videoServerApp          # Source code for the video server
-    ├── webServerApp            # Source code for the web server
-    ├── ExampleVideo            # Some example video that's displayed on the website
-    ├── video.env               # Environment variable for video server
-    ├── web.env                 # Environment variable for web server
-    ├── .gitignore
-    ├── docker-compose.yml
-    └── README.md
++ **videoServerApp**
 
-  Everything else is self explanatory so im gonna focus on the 2 main components that are **videoServerApp** and **webServerApp**.
+  ```sh
+    ├── Dockerfile              # This is used to build the docker image
+    ├── videoServer             # This is where all the magic reside
+    │   ├── aiModel             # Used for loading AI models and use them
+    │   ├── common              # Used for various purpose 
+    │   ├── proto               # Proto file and protobuf API
+    │   ├── service             # Main service of this project, simulate IO read on a camera server
+    │   ├── transportation      # Various type of transportation protocol is stored here
+    │   ├── __init__.py         # Used to indicate that this is a python module
+    │   ├── __main__.py         # :))
+    │   └── app.py              # Used to start the whole thing
+    ├── .dockerignore           # Ignore some unnecessary things 
+    ├── entrypoint.sh           # Script that run at container startup
+    └── requirements.txt        # Python required dependencies
+    ```
 
-  + **videoServerApp**
++ **webServerApp**
 
+  ```sh
+    ├── Dockerfile              # This is used to build the docker image
+    ├── webServer               # This is where all the magic reside
+    │   ├── db                  # Store the persistance database
+    │   ├── common              # Used for various purpose
+    │   ├── proto               # Proto file and protobuf API
+    │   ├── service             # Main service of this project, run the website
+    │   ├── transportation      # Various type of transportation protocol is stored here
+    │   ├── __init__.py         # Used to indicate that this is a python module
+    │   ├── __main__.py         # :))
+    │   └── app.py              # Used to start the whole thing
+    ├── .dockerignore           # Ignore some unnecessary things 
+    └── requirements.txt        # Python required dependencies
+    ```
+
+    <p align="right">(<a href="#readme-top">back to top</a>)</p>
