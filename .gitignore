@@ -3,6 +3,7 @@ videoServerApp/videoServer/service/__pycache__/
 videoServerApp/videoServer/proto/__pycache__/
 videoServerApp/.vscode
 
+
 webServerApp/webserver/__pycache__/
 webServerApp/webserver/service/__pycache__/
 webServerApp/webserver/proto/__pycache__/

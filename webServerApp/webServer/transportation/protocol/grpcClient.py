@@ -3,7 +3,7 @@ import cv2
 
 from webServer.proto import image_pb2, image_pb2_grpc
 from webServer.common.helper import deserializeTheImage
-from webServer.transportation.clientProtocol import clientProtocol
+from webServer.transportation.protocol.clientProtocol import clientProtocol
 
 class grpcClient(clientProtocol):
     def __init__(self) -> None:

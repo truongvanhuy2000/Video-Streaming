@@ -1,6 +1,6 @@
 import os
-from webServer.transportation.grpcClient import grpcClient
-from webServer.transportation.httpClient import httpClient
+from webServer.transportation.protocol.grpcClient import grpcClient
+from webServer.transportation.protocol.httpClient import httpClient
 
 def getTransportMethod(method):
     match method:

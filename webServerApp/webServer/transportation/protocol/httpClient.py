@@ -1,4 +1,4 @@
-from webServer.transportation.clientProtocol import clientProtocol
+from webServer.transportation.protocol.clientProtocol import clientProtocol
 
 class httpClient(clientProtocol):
     def __init__(self) -> None:
