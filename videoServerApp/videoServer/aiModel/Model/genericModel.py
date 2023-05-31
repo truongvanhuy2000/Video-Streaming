@@ -1,7 +1,7 @@
-from videoServer.aiModel.model import model
+from videoServer.aiModel.Model.aimodel import aimodel
 import cv2
 
-class genericModel(model):
+class genericModel(aimodel):
     def __init__(self) -> None:
         self.hog = cv2.HOGDescriptor()
         self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())

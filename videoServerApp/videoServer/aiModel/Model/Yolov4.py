@@ -1,7 +1,7 @@
-from videoServer.aiModel.model import model
+from videoServer.aiModel.Model.aimodel import aimodel
 import cv2
 
-class Yolov3(model):
+class Yolov4(aimodel):
     def __init__(self) -> None:
         pass
 

@@ -1,18 +1,22 @@
 from videoServer.proto import image_pb2, image_pb2_grpc
 from videoServer.service.cameraServer import camera_server
 from videoServer.common import helper
-from videoServer.transportation.protocolServer import protocolServer
+from videoServer.transportation.protocol.protocolServer import protocolServer
 
 import grpc
 from concurrent import futures
-import socket
 import logging
 import sys
-import multiprocessing
 
 _LOGGER = logging.getLogger(__name__)
-_PROCESS_COUNT = multiprocessing.cpu_count()
-_PORT_ = 9876
+
+def setUpLogging():
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter('[PID %(process)d] %(message)s')
+    handler.setFormatter(formatter)
+    _LOGGER.addHandler(handler)
+    _LOGGER.setLevel(logging.INFO)
+    sys.stdout.flush()
 
 class imageTranfer(image_pb2_grpc.image_tranferServicer):
     def __init__(self) -> None:
@@ -41,7 +45,8 @@ class imageTranfer(image_pb2_grpc.image_tranferServicer):
     
 
 class grpcServer(protocolServer):
-    def runServer(self, address):
+    def serve(self, address):
+        setUpLogging()
         _LOGGER.info("start a new server")
         # interceptors=(SingleConnectionInterceptor(),)
         myService = imageTranfer()
@@ -52,33 +57,4 @@ class grpcServer(protocolServer):
         server.start()
         server.wait_for_termination()
 
-    def startSocket(self):
-        """Find and reserve a port for all subprocesses to use."""
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        if sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT) == 0:
-            raise RuntimeError("Failed to set SO_REUSEPORT.")
-        sock.bind(('', _PORT_))
-        print(f"The server is listening on address: {sock.getsockname()[0]}:{sock.getsockname()[1]}")
-        return sock.getsockname()[1]
 
-    def setUpLogging(self):
-        handler = logging.StreamHandler(sys.stdout)
-        formatter = logging.Formatter('[PID %(process)d] %(message)s')
-        handler.setFormatter(formatter)
-        _LOGGER.addHandler(handler)
-        _LOGGER.setLevel(logging.INFO)
-        sys.stdout.flush()
-
-    def serve(self):
-        self.setUpLogging()
-        port = self.startSocket()
-        bind_address = '0.0.0.0:{}'.format(port)
-        workers = []
-        for _ in range(_PROCESS_COUNT):
-            worker = multiprocessing.Process(target=self.runServer,
-                                                args=(bind_address,))
-            worker.start()
-            workers.append(worker)
-        for worker in workers:
-            worker.join()

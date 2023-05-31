@@ -1,14 +1,13 @@
 from videoServer.common import helper
 from videoServer.aiModel import modelProvider
 import cv2
-import os
 
 class camera_server():
     def __init__(self, video, model) -> None:
         # dir = '/home/huy/Videos/' + video +'.mp4'
         dir = 'videoServer/resources/' + video + '.mp4'
         self.cap = cv2.VideoCapture(dir)
-        self.AImodel = modelProvider.getModel(model)
+        # self.AImodel = modelProvider.getModel(model)
     
     def humanDetect(self):
         # Display the resulting frame

@@ -1,5 +1,5 @@
-from videoServer.transportation.grpcServer import grpcServer
-from videoServer.transportation.httpServer import httpServer
+from videoServer.transportation.protocol.grpcServer import grpcServer
+from videoServer.transportation.protocol.httpServer import httpServer
 
 def getProtocol(protocol):
     match protocol:

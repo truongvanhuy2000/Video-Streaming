@@ -1,6 +1,6 @@
-from videoServer.aiModel.model.genericModel import genericModel
-from videoServer.aiModel.model.Yolov3 import Yolov3
-from videoServer.aiModel.model.Yolov4 import Yolov4
+from videoServer.aiModel.Model.genericModel import genericModel
+from videoServer.aiModel.Model.Yolov3 import Yolov3
+from videoServer.aiModel.Model.Yolov4 import Yolov4
 
 def getModel(model):
     # match model:

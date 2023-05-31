@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class model(ABC):
+class aimodel(ABC):
     @abstractmethod
     def detect(self, frame):
         pass

@@ -3,6 +3,7 @@ import pybase64
 import numpy as np
 import socket
 
+
 def deserializeTheImage(byte):
     jpg_original = pybase64.b64decode(byte)
     im_arr = np.frombuffer(jpg_original, dtype=np.uint8)  # im_arr is one-dim Numpy array
@@ -26,3 +27,4 @@ def is_socket_closed(sock: socket.socket) -> bool:
     except Exception as e:
         return False
     return False
+
