@@ -2,8 +2,8 @@ version: "3"
 
 services:
   videoserver1:
-    # image: truongvanhuy2000/videoserverapp
-    build: videoServerApp
+    image: truongvanhuy2000/videoserverapp
+    # build: videoServerApp
     networks:
       - cat
     env_file:
@@ -23,8 +23,8 @@ services:
 
 
   videoserver2:
-    # image: truongvanhuy2000/videoserverapp
-    build: videoServerApp
+    image: truongvanhuy2000/videoserverapp
+    # build: videoServerApp
     networks:
       - cat
     env_file:
@@ -43,8 +43,8 @@ services:
         constraints: [node.role == worker]
 
   videoserver3:
-    # image: truongvanhuy2000/videoserverapp
-    build: videoServerApp
+    image: truongvanhuy2000/videoserverapp
+    # build: videoServerApp
     networks:
       - cat
     env_file:
@@ -63,8 +63,8 @@ services:
         constraints: [node.role == worker]
         
   videoserver4:
-    # image: truongvanhuy2000/videoserverapp
-    build: videoServerApp
+    image: truongvanhuy2000/videoserverapp
+    # build: videoServerApp
     networks:
       - cat
     env_file:
@@ -84,8 +84,8 @@ services:
 
 
   webserver:
-    # image: truongvanhuy2000/webserverapp
-    build: webServerApp
+    image: truongvanhuy2000/webserverapp
+    # build: webServerApp
     ports:
       - "5000:5000"
     restart: unless-stopped
