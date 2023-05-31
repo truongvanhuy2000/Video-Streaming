@@ -2,7 +2,7 @@ from flask import Flask, Response, render_template, request, redirect, url_for
 import os
 
 from webServer.transportation import protocolProvider
-from webServer.service.persistentData import persistentData
+from webServer.db.persistentData import persistentData
 
 # Set up environment variable
 GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
