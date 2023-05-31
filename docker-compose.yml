@@ -15,6 +15,12 @@ services:
         target: /video/
         volume:
           nocopy: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+
 
   videoserver2:
     image: truongvanhuy2000/videoserverapp
@@ -30,6 +36,11 @@ services:
         target: /video/
         volume:
           nocopy: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
 
   videoserver3:
     image: truongvanhuy2000/videoserverapp
@@ -45,6 +56,11 @@ services:
         target: /video/
         volume:
           nocopy: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
         
   videoserver4:
     image: truongvanhuy2000/videoserverapp
@@ -60,6 +76,12 @@ services:
         target: /video/
         volume:
           nocopy: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+
 
   webserver:
     image: truongvanhuy2000/webserverapp
