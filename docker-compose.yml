@@ -87,7 +87,7 @@ services:
     image: 127.0.0.1:3500/webserverapp
     # build: webServerApp
     ports:
-      - "3500:3500"
+      - "5000:5000"
     restart: unless-stopped
     env_file:
       - webServerApp/web.env
