@@ -2,7 +2,7 @@ version: "3"
 
 services:
   videoserver1:
-    image: truongvanhuy2000/videoserverapp
+    image: 127.0.0.1:5000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -23,7 +23,7 @@ services:
 
 
   videoserver2:
-    image: truongvanhuy2000/videoserverapp
+    image: 127.0.0.1:5000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -43,7 +43,7 @@ services:
         constraints: [node.role == worker]
 
   videoserver3:
-    image: truongvanhuy2000/videoserverapp
+    image: 127.0.0.1:5000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -63,7 +63,7 @@ services:
         constraints: [node.role == worker]
         
   videoserver4:
-    image: truongvanhuy2000/videoserverapp
+    image: 127.0.0.1:5000/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -84,7 +84,7 @@ services:
 
 
   webserver:
-    image: truongvanhuy2000/webserverapp
+    image: 127.0.0.1:5000/webserverapp
     # build: webServerApp
     ports:
       - "5000:5000"
@@ -110,6 +110,6 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=192.168.42.8,nfsvers=4.1,nolock,soft,rw"
+      o: "addr=192.168.56.1,nfsvers=4.1,nolock,soft,rw"
       device: ":home/huy/Videos"
   
