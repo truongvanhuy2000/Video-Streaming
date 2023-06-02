@@ -2,7 +2,7 @@ version: "3"
 
 services:
   videoserver1:
-    image: 127.0.0.1:5000/videoserverapp
+    image: 127.0.0.1:3500/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -23,7 +23,7 @@ services:
 
 
   videoserver2:
-    image: 127.0.0.1:5000/videoserverapp
+    image: 127.0.0.1:3500/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -43,7 +43,7 @@ services:
         constraints: [node.role == worker]
 
   videoserver3:
-    image: 127.0.0.1:5000/videoserverapp
+    image: 127.0.0.1:3500/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -63,7 +63,7 @@ services:
         constraints: [node.role == worker]
         
   videoserver4:
-    image: 127.0.0.1:5000/videoserverapp
+    image: 127.0.0.1:3500/videoserverapp
     # build: videoServerApp
     networks:
       - cat
@@ -84,10 +84,10 @@ services:
 
 
   webserver:
-    image: 127.0.0.1:5000/webserverapp
+    image: 127.0.0.1:3500/webserverapp
     # build: webServerApp
     ports:
-      - "5000:5000"
+      - "3500:3500"
     restart: unless-stopped
     env_file:
       - webServerApp/web.env
