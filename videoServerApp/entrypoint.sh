@@ -9,6 +9,7 @@
 # ls -a /video
 
 sleep 5
+mkdir -p videoServer/resources
 cp -a $MOUNT_DIR/* videoServer/resources
 
 chmod -R a+rw videoServer/resources
