@@ -99,13 +99,13 @@ services:
       placement:
         constraints: [node.role == manager]
     
-    loadbalancer:
-      image: ubuntu
-      networks:
-        - cat
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
-      command: sleep infinity
+  loadbalancer:
+    image: ubuntu
+    networks:
+      - cat
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: sleep infinity
 
 networks:
   cat:
