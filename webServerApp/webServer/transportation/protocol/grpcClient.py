@@ -5,6 +5,8 @@ from webServer.proto import image_pb2, image_pb2_grpc
 from webServer.common.helper import deserializeTheImage
 from webServer.transportation.protocol.clientProtocol import clientProtocol
 
+import socket
+
 class grpcClient(clientProtocol):
     def __init__(self) -> None:
         super().__init__()
@@ -17,6 +19,7 @@ class grpcClient(clientProtocol):
             ]
         with grpc.insecure_channel(addr, options=channel_opt) as channel:
             stub = image_pb2_grpc.image_tranferStub(channel=channel)
+
             response = stub.send_me_image(image_pb2.image_request(model=model, video=video))
             try:
                 for img in response:
@@ -27,8 +30,9 @@ class grpcClient(clientProtocol):
                     yield (b'--frame\r\n'
                         b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
             except:
+                response.cancel()
                 print("video done")
-            stub.ack(image_pb2.ack_request(req="done video"))
+                stub.ack(image_pb2.ack_request(req="done video"))
 
     def response(self):
         print("do nothing")

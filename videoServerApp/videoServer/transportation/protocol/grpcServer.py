@@ -39,16 +39,12 @@ class imageTranfer(image_pb2_grpc.image_tranferServicer):
             # cv2.destroyWindow("server")
             print("close video")
         return image_pb2.ack_response(rep="ok")
-    
-    def getCurrentActiveConnection(self):
-        return self.activeConnection
-    
 
 class grpcServer(protocolServer):
     def serve(self, address):
         setUpLogging()
         _LOGGER.info("start a new server")
-        # interceptors=(SingleConnectionInterceptor(),)
+
         myService = imageTranfer()
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=1), maximum_concurrent_rpcs=1)
         image_pb2_grpc.add_image_tranferServicer_to_server(myService, server)
