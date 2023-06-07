@@ -35,7 +35,7 @@ class dockerClient:
 
     def readVideoServerConfig(self):
         videoServerConfig = self.config.get('videoserver')
-
+        
         image = videoServerConfig.get('image')
         networks = [].append(videoServerConfig.get('networks'))
         env = [].append(videoServerConfig.get('environment'))
