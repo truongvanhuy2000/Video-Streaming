@@ -3,8 +3,9 @@ videoserver:
   # build: videoServerApp
   networks:
     - cat
-  environment:
-    - TRANSPORT_METHOD=GRPC
+  env_file:
+    - videoServerApp/video.env
+  privileged: true
   volumes:
     - type: volume
       source: nfsvolume

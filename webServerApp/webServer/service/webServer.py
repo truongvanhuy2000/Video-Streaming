@@ -5,17 +5,17 @@ from webServer.transportation import protocolProvider
 from webServer.db.persistentData import persistentData
 
 # Set up environment variable
-# GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
-# GRPC_SERVER2 = os.getenv('GRPC_SERVER2')
-# GRPC_SERVER3 = os.getenv('GRPC_SERVER3')
-# GRPC_SERVER4 = os.getenv('GRPC_SERVER4')
-# TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
+GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
+GRPC_SERVER2 = os.getenv('GRPC_SERVER2')
+GRPC_SERVER3 = os.getenv('GRPC_SERVER3')
+GRPC_SERVER4 = os.getenv('GRPC_SERVER4')
+TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
 
-GRPC_SERVER1 = '0.0.0.0:9876'
-GRPC_SERVER2 = '0.0.0.0:9876'
-GRPC_SERVER3 = '0.0.0.0:9876'
-GRPC_SERVER4 = '0.0.0.0:9876'
-TRANSPORT_METHOD = 'GRPC'
+# GRPC_SERVER1 = '0.0.0.0:9876'
+# GRPC_SERVER2 = '0.0.0.0:9876'
+# GRPC_SERVER3 = '0.0.0.0:9876'
+# GRPC_SERVER4 = '0.0.0.0:9876'
+# TRANSPORT_METHOD = 'GRPC'
 
 if (GRPC_SERVER1 is None) and (GRPC_SERVER2 is None) and (GRPC_SERVER3 is None) and (GRPC_SERVER4 is None) and (TRANSPORT_METHOD is None): 
     print("Missing environment variable")
