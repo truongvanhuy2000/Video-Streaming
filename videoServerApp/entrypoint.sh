@@ -10,7 +10,7 @@
 
 sleep 5
 mkdir -p videoServer/resources
-cp -a $MOUNT_DIR/* videoServer/resources
+cp -a /video/* videoServer/resources
 
 chmod -R a+rw videoServer/resources
 
