@@ -126,4 +126,5 @@ volumes:
       type: "nfs"
       o: "addr=192.168.56.1,nfsvers=4.1,nolock,soft,rw"
       device: ":home/huy/Videos"
+    name: "nfsvolume"
   

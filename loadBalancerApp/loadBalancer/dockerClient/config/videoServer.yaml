@@ -8,7 +8,7 @@ videoserver:
   volumes:
     - type: volume
       source: nfsvolume
-      target: /video/
+      target: /video
       volume:
         nocopy: true
   deploy:
