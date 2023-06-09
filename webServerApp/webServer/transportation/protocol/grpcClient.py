@@ -5,14 +5,12 @@ from webServer.proto import image_pb2, image_pb2_grpc
 from webServer.common.helper import deserializeTheImage
 from webServer.transportation.protocol.clientProtocol import clientProtocol
 
-import socket
 
 class grpcClient(clientProtocol):
     def __init__(self) -> None:
         super().__init__()
 
     def request(self, video, model, addr):
-        print("Try connect to: " + addr)
         channel_opt = [
                 ("grpc.so_reuseport", 1),
                 ("grpc.use_local_subchannel_pool", 1)
@@ -35,7 +33,6 @@ class grpcClient(clientProtocol):
                 stub.ack(image_pb2.ack_request(req="done video"))
 
     def response(self):
-        print("do nothing")
         pass
 
 

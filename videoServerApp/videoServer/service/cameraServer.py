@@ -1,21 +1,20 @@
-from videoServer.common import helper
 from videoServer.aiModel import modelProvider
+from videoServer.common import logger
+
 import cv2
+import os
 
 class camera_server():
     def __init__(self, video, model) -> None:
-        # dir = '/home/huy/Videos/' + video +'.mp4'
-        dir = 'videoServer/resources/' + video + '.mp4'
+        dir = os.getenv('RESOURCE_DIR') + video + '.mp4'
         self.cap = cv2.VideoCapture(dir)
         # self.AImodel = modelProvider.getModel(model)
     
     def humanDetect(self):
-        # Display the resulting frame
-        # initialize the HOG descriptor
         try:
             ret, frame = self.cap.read()
         except:
-            print("something wrong here")
+            logger._LOGGER.error("something wrong here")
         if ret == False:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             ret, frame = self.cap.read()

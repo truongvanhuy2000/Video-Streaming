@@ -1,4 +1,4 @@
 run:
-	python3 -m videoServer
+	@python3 -m videoServer
 test:
-	python3 -m unittest discover
+	@python3 -m unittest discover

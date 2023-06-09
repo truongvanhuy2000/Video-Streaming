@@ -1,8 +1,11 @@
 from flask import Flask, Response, render_template, request, redirect, url_for
 import os
+import logging
 
 from webServer.transportation import protocolProvider
 from webServer.db.persistentData import persistentData
+import threading
+from webServer.common import logger 
 
 # Set up environment variable
 GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
@@ -11,29 +14,24 @@ GRPC_SERVER3 = os.getenv('GRPC_SERVER3')
 GRPC_SERVER4 = os.getenv('GRPC_SERVER4')
 TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
 
-# GRPC_SERVER1 = '0.0.0.0:9876'
-# GRPC_SERVER2 = '0.0.0.0:9876'
-# GRPC_SERVER3 = '0.0.0.0:9876'
-# GRPC_SERVER4 = '0.0.0.0:9876'
-# TRANSPORT_METHOD = 'GRPC'
-
 if (GRPC_SERVER1 is None) and (GRPC_SERVER2 is None) and (GRPC_SERVER3 is None) and (GRPC_SERVER4 is None) and (TRANSPORT_METHOD is None): 
     print("Missing environment variable")
     exit()
 
-db = persistentData('webServer/db/persistentData.json')
-app = Flask(__name__)
 
-video_feeds = [
-    'video_feed_one',
-    'video_feed_two',
-    'video_feed_three',
-    'video_feed_four'
-]
+app = Flask(__name__)
 status = None
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    video_feeds = [
+        'video_feed_one',
+        'video_feed_two',
+        'video_feed_three',
+        'video_feed_four'
+    ]
+    db = persistentData('webServer/db/persistentData.json')
+
     if request.method == 'POST':
         aiModel = request.form['Model']
         view = int(request.form['View'])
@@ -55,43 +53,36 @@ def index():
 def status():
     global status
     action = request.form['action']
-    # Handle the action value accordingly
-    if action == "start":
-        status = "start"
-    else:
-        status = "stop"
+    status = "start" if action == "start" else "stop"
     return redirect(url_for('index'))
 
 @app.route('/<variable>/video_feed_one')
 def video_feed_one(variable):
-    if status != "start":
-        return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video1", model=variable, addr=GRPC_SERVER1),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return handleVideoFeed(variable=variable, video="video1", addr=GRPC_SERVER1)
 
 @app.route('/<variable>/video_feed_two')
 def video_feed_two(variable):
-    if status != "start":
-        return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video2", model=variable, addr=GRPC_SERVER2),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return handleVideoFeed(variable=variable, video="video2", addr=GRPC_SERVER2)
 
 @app.route('/<variable>/video_feed_three')
 def video_feed_three(variable):
-    if status != "start":
-        return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video3", model=variable, addr=GRPC_SERVER3),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return handleVideoFeed(variable=variable, video="video3", addr=GRPC_SERVER3)
 
 @app.route('/<variable>/video_feed_four')
 def video_feed_four(variable):
+    return handleVideoFeed(variable=variable, video="video4", addr=GRPC_SERVER4)
+
+def handleVideoFeed(variable, video, addr):
     if status != "start":
         return None
+    # Print the thread identifier
+    logger._LOGGER.info("Current Thread: " + threading.current_thread().name)
+
     transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video4", model=variable, addr=GRPC_SERVER4),
+    return Response(transportMethod.request(video=video, 
+                                            model=variable, 
+                                            addr=addr),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
 def runWebServer():
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="0.0.0.0", debug=False, )
