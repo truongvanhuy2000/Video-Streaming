@@ -22,3 +22,9 @@ runvideoserver:
 	export RESOURCE_DIR=/home/huy/Videos/ && \
 	export TRANSPORT_METHOD=GRPC && \
 	python3 -m videoServer
+
+runloadbalancer:
+	@cd loadBalancerApp && \
+	export DOCKER_DAEMON=192.168.56.21:2375 && \
+	export BALANCING_ALGORITHM=roundRobin && \
+	python3 -m loadBalancer

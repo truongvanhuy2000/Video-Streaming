@@ -10,7 +10,7 @@ class grpcClient(clientProtocol):
     def __init__(self) -> None:
         super().__init__()
 
-    def request(self, video, model, addr):
+    def request(self, video, model, addr, sock):
         channel_opt = [
                 ("grpc.so_reuseport", 1),
                 ("grpc.use_local_subchannel_pool", 1)
@@ -30,7 +30,10 @@ class grpcClient(clientProtocol):
             except:
                 response.cancel()
                 print("video done")
+                request = "CLOSE"
+                sock.sendall(request.encode())
                 stub.ack(image_pb2.ack_request(req="done video"))
+
 
     def response(self):
         pass
