@@ -81,7 +81,7 @@ def handleConnectionToService(video, model):
     response = sock.recv(2048).decode()
 
     logger._LOGGER.info(f"Response from server is {response}")
-    time.sleep(10)
+    time.sleep(5)
     videoServerAddress = f"{response}:{VIDEO_SERVER_PORT}"
     transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
     try:
