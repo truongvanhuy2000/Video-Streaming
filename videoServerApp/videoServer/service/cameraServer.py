@@ -9,7 +9,14 @@ class camera_server():
         dir = os.getenv('RESOURCE_DIR') + video + '.mp4'
         self.cap = cv2.VideoCapture(dir)
         # self.AImodel = modelProvider.getModel(model)
-    
+        if self.cap.isOpened():
+            # Video is successfully opened
+            logger._LOGGER.info("Video successfully read")
+        else:
+            # Failed to open the video
+            logger._LOGGER.error("Failed to read video")
+            exit()
+
     def humanDetect(self):
         try:
             ret, frame = self.cap.read()

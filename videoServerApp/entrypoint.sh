@@ -9,10 +9,10 @@
 # ls -a /video
 
 sleep 5
-mkdir -p videoServer/resources
-cp -a /video/* videoServer/resources
+mkdir -p /video/resources
+cp -a /video/* /video/resources
 
-chmod -R a+rw videoServer/resources
+chmod -R a+rw /video/resources
 
-ls -a videoServer/resources
+ls -a /video/resources
 "python3" -m videoServer
