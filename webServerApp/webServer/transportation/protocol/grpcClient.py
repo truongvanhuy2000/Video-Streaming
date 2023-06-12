@@ -15,7 +15,7 @@ class grpcClient(clientProtocol):
         while True:
             try:
                 rep = stub.are_you_ready(image_pb2.ready_request(req="READY"))
-                if rep == "READY":
+                if rep.req == "READY":
                     logger._LOGGER.info("Server is ready")
                     break
             except:
