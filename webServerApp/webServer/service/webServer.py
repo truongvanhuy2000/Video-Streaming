@@ -73,7 +73,7 @@ def video_feed_four(variable):
 def handleConnectionToService(video, model):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     logger._LOGGER.info(f"Try to connect to loadbalancer:{LOAD_BALANCER_PORT}")
-    sock.connect((LOAD_BALANCER_ADDR, LOAD_BALANCER_PORT))
+    sock.connect(('loadbalancer', 7654))
     logger._LOGGER.info(f"Send close request to server {LOAD_BALANCER_PORT}")
 
     sock.sendall("CONNECT".encode())
