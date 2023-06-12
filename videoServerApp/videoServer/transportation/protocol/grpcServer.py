@@ -10,11 +10,11 @@ import grpc
 class imageTranfer(image_pb2_grpc.image_tranferServicer):
     def __init__(self) -> None:
         super().__init__()
-        
+
     def are_you_ready(self, request, context):
         client_ip = context.peer().split(':')[1]
         client_port = context.peer().split(':')[2]
-        if request.req is "READY":
+        if request.req == "READY":
             logger._LOGGER.info(f"{client_ip}:{client_port} want to know if i'm ready")
             return image_pb2.ready_response(rep="READY")
 
