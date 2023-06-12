@@ -10,11 +10,8 @@ push:
 
 runwebserver:
 	@cd webServerApp && \
-	export GRPC_SERVER1=0.0.0.0:9876 && \
-	export GRPC_SERVER2=0.0.0.0:9876 && \
-	export GRPC_SERVER3=0.0.0.0:9876 && \
-	export GRPC_SERVER4=0.0.0.0:9876 && \
 	export TRANSPORT_METHOD=GRPC && \
+	export LOAD_BALANCER_PORT=7654 && \
 	python3 -m webServer
 	
 runvideoserver:
@@ -25,6 +22,7 @@ runvideoserver:
 
 runloadbalancer:
 	@cd loadBalancerApp && \
-	export DOCKER_DAEMON=192.168.56.21:2375 && \
+	export DOCKER_DAEMON=192.168.56.20:2375 && \
 	export BALANCING_ALGORITHM=roundRobin && \
+	export PORT=7654 && \
 	python3 -m loadBalancer

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class clientProtocol(ABC):
     @abstractmethod
-    def request(self, video, model, addr, sock):
+    def request(self, video, model, addr):
         pass
 
     @abstractmethod

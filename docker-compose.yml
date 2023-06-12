@@ -1,88 +1,6 @@
 version: "3"
 
 services:
-  videoserver1:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - videoServerApp/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-
-
-  videoserver2:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - videoServerApp/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-
-  videoserver3:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - videoServerApp/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-        
-  videoserver4:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - videoServerApp/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-
-
   webserver:
     image: 127.0.0.1:3500/webserverapp
     # build: webServerApp
@@ -100,13 +18,14 @@ services:
         constraints: [node.role == manager]
     
   loadbalancer:
-    image: ubuntu
+    image: 127.0.0.1:3500/loadbalancerapp
     networks:
       - cat
+    restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: sleep infinity
-    
+    env_file:
+      - loadBalancerApp/balancer.env
     deploy:
       mode: replicated
       replicas: 1

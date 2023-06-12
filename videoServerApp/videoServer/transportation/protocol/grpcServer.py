@@ -35,7 +35,7 @@ class grpcServer(protocolServer):
         logger._LOGGER.info("start a new server")
 
         myService = imageTranfer()
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=1), maximum_concurrent_rpcs=1)
+        server = grpc.server(futures.ThreadPoolExecutor(max_workers=1), maximum_concurrent_rpcs=2)
         image_pb2_grpc.add_image_tranferServicer_to_server(myService, server)
 
         server.add_insecure_port(address)

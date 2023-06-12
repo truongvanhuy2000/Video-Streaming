@@ -8,21 +8,16 @@ from webServer.common import logger
 import socket
 
 # Set up environment variable
-GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
-GRPC_SERVER2 = os.getenv('GRPC_SERVER2')
-GRPC_SERVER3 = os.getenv('GRPC_SERVER3')
-GRPC_SERVER4 = os.getenv('GRPC_SERVER4')
 TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
+LOAD_BALANCER_ADDR = os.getenv('LOAD_BALANCER_ADDR')
+VIDEO_SERVER_PORT = int(os.getenv('VIDEO_SERVER_PORT'))
 
-if (GRPC_SERVER1 is None) and (GRPC_SERVER2 is None) and (GRPC_SERVER3 is None) and (GRPC_SERVER4 is None) and (TRANSPORT_METHOD is None): 
-    print("Missing environment variable")
+if any(var is None for var in [VIDEO_SERVER_PORT, TRANSPORT_METHOD, LOAD_BALANCER_ADDR]):
+    logger._LOGGER.error("Missing environment variable")
     exit()
-
 
 app = Flask(__name__)
 status = None
-
-_PORT_ = 7654
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -60,39 +55,49 @@ def status():
 
 @app.route('/<variable>/video_feed_one')
 def video_feed_one(variable):
-    return handleVideoFeed(variable=variable, video="video1", addr=GRPC_SERVER1)
+    return handleVideoFeed(variable=variable, video="video1")
 
 @app.route('/<variable>/video_feed_two')
 def video_feed_two(variable):
-    return handleVideoFeed(variable=variable, video="video2", addr=GRPC_SERVER2)
+    return handleVideoFeed(variable=variable, video="video2")
 
 @app.route('/<variable>/video_feed_three')
 def video_feed_three(variable):
-    return handleVideoFeed(variable=variable, video="video3", addr=GRPC_SERVER3)
+    return handleVideoFeed(variable=variable, video="video3")
 
 @app.route('/<variable>/video_feed_four')
 def video_feed_four(variable):
-    return handleVideoFeed(variable=variable, video="video4", addr=GRPC_SERVER4)
+    return handleVideoFeed(variable=variable, video="video4")
 
-def handleVideoFeed(variable, video, addr):
+def handleConnectionToService(video, model):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((LOAD_BALANCER_ADDR))
+        logger._LOGGER.info(f"Send close request to server {LOAD_BALANCER_ADDR}")
+
+        sock.sendall("CONNECT".encode())
+        response = sock.recv(2048).decode()
+
+        logger._LOGGER.info(f"Response from server is {response}")
+
+        videoServerAddress = f"{response}:{VIDEO_SERVER_PORT}"
+        transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
+        try:
+            yield from transportMethod.request(video, model, videoServerAddress)
+        except:
+            logger._LOGGER.info(f"Send close request to server")
+            
+            sock.sendall("CLOSE".encode())
+            sock.close()
+
+def handleVideoFeed(variable, video):
     if status != "start":
         return None
     # Print the thread identifier
     logger._LOGGER.info("Current Thread: " + threading.current_thread().name)
-
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(('127.0.0.1', _PORT_))
-    request = "CONNECT"
-    s.sendall(request.encode())
-    response = s.recv(2048).decode()
-    
-    logger._LOGGER.info(f"Response from server is {response}")
-
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video=video, 
-                                            model=variable, 
-                                            addr=addr, sock=s),
+    return Response(handleConnectionToService(video=video, 
+                                            model=variable),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def runWebServer():
-    app.run(host="0.0.0.0", debug=False, )
+    app.run(host="0.0.0.0", debug=False)
+    

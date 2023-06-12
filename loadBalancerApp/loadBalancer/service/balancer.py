@@ -7,50 +7,62 @@ import threading
 import socket
 import selectors
 import os
-import types
 
-_PORT_ = 7654
+_PORT_ = int(os.getenv('PORT'))
+SERVER_ADDRESS = os.getenv('DOCKER_DAEMON')
+BALANCING_ALGORITHM = os.getenv('BALANCING_ALGORITHM')
+
+if any(var is None for var in [_PORT_, SERVER_ADDRESS, BALANCING_ALGORITHM]):
+    print("Missing environment variable")
+    exit()
+
 connectionQueue = queue.Queue(maxsize = 100)
 
 class Node():
-    def __init__(self, nodeId, ) -> None:
+    def __init__(self, nodeId, docker_client:dockerClient) -> None:
         self.nodeId = nodeId
         self.serviceCount = 0
         self.serviceList = {}
+        self.docker_client = docker_client
 
-    def addNewService(self, client, service):
+    def createService(self, connection):
+        serviceName = self.docker_client.createService(self.nodeId, "videoServer")
+        # Increment the number of service counts
         self.serviceCount += 1
-        self.serviceList[client] = service
+        # Add that service to its corresponding connection
+        self.serviceList[connection] = serviceName
+
+        return serviceName
 
     def removeService(self, client):
         try:
-            service = self.serviceList.pop(client)
+            serviceName = self.serviceList.pop(client)
         except KeyError:
             logger._LOGGER.error("No item like this exist")
             return
-        self.serviceCount -= 1
-        return service
+        if self.serviceCount > 0:
+            self.serviceCount -= 1
+
+        self.docker_client.removeService(serviceName=serviceName)
 
 class loadBalancer():
     def __init__(self) -> None:
-        self.docker_client = dockerClient(serverAddr=os.getenv('DOCKER_DAEMON'), configDir='loadBalancer/dockerClient/config/')
         self.connectionHash = {}
         self.nodeList = []
-        
-        for nodeId in self.docker_client.getNodeList():
-            node = Node(nodeId)
+        docker_client = dockerClient(serverAddr=SERVER_ADDRESS, configDir='loadBalancer/dockerClient/config/')
+
+        for nodeId in docker_client.getNodeList():
+            node = Node(nodeId, docker_client)
             self.nodeList.append(node)
 
         self.iter = itertools.cycle(self.nodeList)
 
     def __addNewConnection(self, connection):
         # searching for appropriate node
-        node = self.__balancingAlgorithm(os.getenv('BALANCING_ALGORITHM'))
+        node = self.__balancingAlgorithm(BALANCING_ALGORITHM)
         # put node object and connection string to a hash map
         self.connectionHash[connection] = node
-        serviceName = self.docker_client.createService(node.nodeId, "videoServer")
-        
-        node.addNewService(client=connection, service=serviceName)
+        serviceName = node.createService(connection=connection)
         return serviceName
     
     def __removeConnection(self, connection):
@@ -59,9 +71,9 @@ class loadBalancer():
         except KeyError:
             logger._LOGGER.error("No key like this exist")
             return
-        serviceName = node.removeService(connection)
-        self.docker_client.removeService(serviceName)
+        node.removeService(connection)
         self.connectionHash.pop(connection)
+        # Close the socket
         connection.close()
 
     def __balancingAlgorithm(self, algorithm) -> Node:
@@ -98,20 +110,18 @@ class loadBalancer():
             elif request == "CLOSE":
                 logger._LOGGER.info(f"{sock.getsockname()} send CLOSE request")
                 self.__removeConnection(sock)
-
     
 class tcpCommunication():
     def __init__(self) -> None:
         self.sel = selectors.DefaultSelector()
-        pass
 
     def tcpCommunication(self):
-        
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind(('', _PORT_))
-            logger._LOGGER.info(f"TCP Thread is listening on {_PORT_}")
             s.listen()
             s.setblocking(False)
+
+            logger._LOGGER.info(f"TCP Thread is listening on {_PORT_}")
             # Registers the socket to be monitored with sel.select() 
             self.sel.register(s, selectors.EVENT_READ, data=None)
             while True:
