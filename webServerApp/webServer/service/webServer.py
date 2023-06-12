@@ -71,6 +71,7 @@ def video_feed_four(variable):
 
 def handleConnectionToService(video, model):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        logger._LOGGER.info(f"Try to connect to {LOAD_BALANCER_ADDR}")
         sock.connect((LOAD_BALANCER_ADDR))
         logger._LOGGER.info(f"Send close request to server {LOAD_BALANCER_ADDR}")
 
