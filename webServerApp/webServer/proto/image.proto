@@ -6,6 +6,7 @@ service image_tranfer{
     rpc send_me_image(image_request) returns (stream image_response);
     rpc upload_image(stream image_up) returns (ack_response);
     rpc ack(ack_request) returns (ack_response);
+    rpc are_you_ready(ready_request) returns (ready_response);
 }
 message image{
     bytes data = 1;
@@ -24,5 +25,11 @@ message ack_request{
     string req = 1;
 }
 message ack_response{
+    string rep = 1;
+}
+message ready_request{
+    string req = 1;
+}
+message ready_response{
     string rep = 1;
 }

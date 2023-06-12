@@ -11,6 +11,13 @@ class grpcClient(clientProtocol):
     def __init__(self) -> None:
         super().__init__()
 
+    def waitForServer(self, stub):
+        while True:
+            rep = stub.are_you_ready(image_pb2.ready_request(req="READY"))
+            if rep is "READY":
+                logger._LOGGER.info("Server is ready")
+                break
+
     def request(self, video, model, addr):
         channel_opt = [
                 ("grpc.so_reuseport", 1),
@@ -21,6 +28,7 @@ class grpcClient(clientProtocol):
 
         with grpc.insecure_channel(addr, options=channel_opt) as channel:
             stub = image_pb2_grpc.image_tranferStub(channel=channel)
+            self.waitForServer(stub=stub)
             response = stub.send_me_image(image_pb2.image_request(model=model, video=video))
             try:
                 for img in response:

@@ -41,3 +41,15 @@ class image_up(_message.Message):
     IMAGE_FIELD_NUMBER: _ClassVar[int]
     image: image
     def __init__(self, image: _Optional[_Union[image, _Mapping]] = ...) -> None: ...
+
+class ready_request(_message.Message):
+    __slots__ = ["req"]
+    REQ_FIELD_NUMBER: _ClassVar[int]
+    req: str
+    def __init__(self, req: _Optional[str] = ...) -> None: ...
+
+class ready_response(_message.Message):
+    __slots__ = ["rep"]
+    REP_FIELD_NUMBER: _ClassVar[int]
+    rep: str
+    def __init__(self, rep: _Optional[str] = ...) -> None: ...

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from videoServer.proto import image_pb2 as image__pb2
+import image_pb2 as image__pb2
 
 
 class image_tranferStub(object):
@@ -29,6 +29,11 @@ class image_tranferStub(object):
                 request_serializer=image__pb2.ack_request.SerializeToString,
                 response_deserializer=image__pb2.ack_response.FromString,
                 )
+        self.are_you_ready = channel.unary_unary(
+                '/image.image_tranfer/are_you_ready',
+                request_serializer=image__pb2.ready_request.SerializeToString,
+                response_deserializer=image__pb2.ready_response.FromString,
+                )
 
 
 class image_tranferServicer(object):
@@ -52,6 +57,12 @@ class image_tranferServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def are_you_ready(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_image_tranferServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -69,6 +80,11 @@ def add_image_tranferServicer_to_server(servicer, server):
                     servicer.ack,
                     request_deserializer=image__pb2.ack_request.FromString,
                     response_serializer=image__pb2.ack_response.SerializeToString,
+            ),
+            'are_you_ready': grpc.unary_unary_rpc_method_handler(
+                    servicer.are_you_ready,
+                    request_deserializer=image__pb2.ready_request.FromString,
+                    response_serializer=image__pb2.ready_response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -128,5 +144,22 @@ class image_tranfer(object):
         return grpc.experimental.unary_unary(request, target, '/image.image_tranfer/ack',
             image__pb2.ack_request.SerializeToString,
             image__pb2.ack_response.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def are_you_ready(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/image.image_tranfer/are_you_ready',
+            image__pb2.ready_request.SerializeToString,
+            image__pb2.ready_response.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
