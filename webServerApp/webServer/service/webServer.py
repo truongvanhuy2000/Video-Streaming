@@ -88,7 +88,7 @@ def handleConnectionToService(video, model):
         yield from transportMethod.request(video, model, videoServerAddress)
     except:
         logger._LOGGER.info(f"Send close request to server")
-        
+        time.sleep(20)
         sock.sendall("CLOSE".encode())
         sock.close()
 
