@@ -4,15 +4,24 @@ import numpy as np
 import socket
 
 
+# def deserializeTheImage(byte):
+#     jpg_original = pybase64.b64decode(byte)
+#     im_arr = np.frombuffer(jpg_original, dtype=np.uint8)  # im_arr is one-dim Numpy array
+#     return cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+# def serializeTheImage(image):
+#     img = cv2.imencode('.jpeg', image)[1]
+#     jpg_as_text = pybase64.b64encode(img)
+#     return jpg_as_text
+
 def deserializeTheImage(byte):
-    jpg_original = pybase64.b64decode(byte)
-    im_arr = np.frombuffer(jpg_original, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    im_arr = np.frombuffer(byte, dtype=np.uint8)  # im_arr is one-dim Numpy array
     return cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
 
 def serializeTheImage(image):
-    img = cv2.imencode('.jpeg', image)[1]
-    jpg_as_text = pybase64.b64encode(img)
-    return jpg_as_text
+    img = cv2.imencode('.jpeg', image)[1].tobytes()
+    return img
+
 # to check if socket still open
 def is_socket_closed(sock: socket.socket) -> bool:
     try:
