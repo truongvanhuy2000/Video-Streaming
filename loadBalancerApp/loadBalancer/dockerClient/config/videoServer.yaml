@@ -5,6 +5,8 @@ videoserver:
     - cat
   environment:
     - TRANSPORT_METHOD=GRPC
+    - RESOURCE_DIR=videoServer/resources/
+    - USE_AI=False
   volumes:
     - type: volume
       source: nfsvolume
