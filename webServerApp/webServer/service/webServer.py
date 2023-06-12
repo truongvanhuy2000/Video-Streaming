@@ -9,10 +9,11 @@ import socket
 
 # Set up environment variable
 TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
-LOAD_BALANCER_ADDR = os.getenv('LOAD_BALANCER_ADDR')
+LOAD_BALANCER_ADDR = 'loadbalancer'
+LOAD_BALANCER_PORT = os.getenv('LOAD_BALANCER_PORT')
 VIDEO_SERVER_PORT = int(os.getenv('VIDEO_SERVER_PORT'))
 
-if any(var is None for var in [VIDEO_SERVER_PORT, TRANSPORT_METHOD, LOAD_BALANCER_ADDR]):
+if any(var is None for var in [VIDEO_SERVER_PORT, TRANSPORT_METHOD, LOAD_BALANCER_PORT]):
     logger._LOGGER.error("Missing environment variable")
     exit()
 
@@ -70,25 +71,25 @@ def video_feed_four(variable):
     return handleVideoFeed(variable=variable, video="video4")
 
 def handleConnectionToService(video, model):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        logger._LOGGER.info(f"Try to connect to {LOAD_BALANCER_ADDR}")
-        sock.connect((LOAD_BALANCER_ADDR))
-        logger._LOGGER.info(f"Send close request to server {LOAD_BALANCER_ADDR}")
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    logger._LOGGER.info(f"Try to connect to loadbalancer:{LOAD_BALANCER_PORT}")
+    sock.connect((LOAD_BALANCER_ADDR, LOAD_BALANCER_PORT))
+    logger._LOGGER.info(f"Send close request to server {LOAD_BALANCER_PORT}")
 
-        sock.sendall("CONNECT".encode())
-        response = sock.recv(2048).decode()
+    sock.sendall("CONNECT".encode())
+    response = sock.recv(2048).decode()
 
-        logger._LOGGER.info(f"Response from server is {response}")
+    logger._LOGGER.info(f"Response from server is {response}")
 
-        videoServerAddress = f"{response}:{VIDEO_SERVER_PORT}"
-        transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-        try:
-            yield from transportMethod.request(video, model, videoServerAddress)
-        except:
-            logger._LOGGER.info(f"Send close request to server")
-            
-            sock.sendall("CLOSE".encode())
-            sock.close()
+    videoServerAddress = f"{response}:{VIDEO_SERVER_PORT}"
+    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
+    try:
+        yield from transportMethod.request(video, model, videoServerAddress)
+    except:
+        logger._LOGGER.info(f"Send close request to server")
+        
+        sock.sendall("CLOSE".encode())
+        sock.close()
 
 def handleVideoFeed(variable, video):
     if status != "start":
