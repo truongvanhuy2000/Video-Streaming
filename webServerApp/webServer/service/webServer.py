@@ -6,7 +6,7 @@ from webServer.db.persistentData import persistentData
 import threading
 from webServer.common import logger 
 import socket
-import time
+import asyncio
 
 # Set up environment variable
 TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
@@ -71,19 +71,8 @@ def video_feed_three(variable):
 def video_feed_four(variable):
     return handleVideoFeed(variable=variable, video="video4")
 
-def handleConnectionToService(video, model):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    logger._LOGGER.info(f"Try to connect to loadbalancer:{LOAD_BALANCER_PORT}")
-    sock.connect(('loadbalancer', 7654))
-    logger._LOGGER.info(f"Send close request to server {LOAD_BALANCER_PORT}")
+def handleConnectionToService(video, model, transportMethod, sock):
 
-    sock.sendall("CONNECT".encode())
-    response = sock.recv(2048).decode()
-
-    logger._LOGGER.info(f"Response from server is {response}")
-
-    transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
-    transportMethod.waitForServer()
     try:
         yield from transportMethod.request(video, model)
     except:
@@ -91,13 +80,26 @@ def handleConnectionToService(video, model):
         sock.sendall("CLOSE".encode())
         sock.close()
 
-def handleVideoFeed(variable, video):
+async def handleVideoFeed(variable, video):
     if status != "start":
         return None
     # Print the thread identifier
-    logger._LOGGER.info("Current Thread: " + threading.current_thread().name)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    logger._LOGGER.info(f"Try to connect to loadbalancer:{LOAD_BALANCER_PORT}")
+
+    sock.connect(('loadbalancer', 7654))
+    sock.sendall("CONNECT".encode())
+    response = sock.recv(2048).decode()
+
+    logger._LOGGER.info(f"Response from server is {response}")
+
+    transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
+    await transportMethod.waitForServer()
+
     return Response(handleConnectionToService(video=video, 
-                                            model=variable),
+                                            model=variable,
+                                            transportMethod=transportMethod,
+                                            sock=sock),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def runWebServer():

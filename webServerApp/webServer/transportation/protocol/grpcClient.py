@@ -1,5 +1,6 @@
 import grpc
 import cv2
+import asyncio
 
 from webServer.proto import image_pb2, image_pb2_grpc
 from webServer.common.helper import deserializeTheImage
@@ -12,11 +13,11 @@ class grpcClient(clientProtocol):
         channel_opt = [("grpc.so_reuseport", 1), ("grpc.use_local_subchannel_pool", 1)]
 
         logger._LOGGER.info(f"Connect to GRPC server: {addr}")
-        
+
         self.channel = grpc.insecure_channel(addr, options=channel_opt)
         self.stub = image_pb2_grpc.image_tranferStub(channel=self.channel)
 
-    def waitForServer(self):
+    async def waitForServer(self):
         while True:
             try:
                 rep = self.stub.are_you_ready(image_pb2.ready_request(req="READY"))
