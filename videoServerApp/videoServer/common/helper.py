@@ -19,7 +19,8 @@ def deserializeTheImage(byte):
     return cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
 
 def serializeTheImage(image):
-    img = cv2.imencode('.jpeg', image)[1].tobytes()
+    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 60]
+    img = cv2.imencode('.jpeg', image, encode_param)[1].tobytes()
     return img
 
 # to check if socket still open
