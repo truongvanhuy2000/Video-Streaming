@@ -21,7 +21,6 @@ class grpcClient(clientProtocol):
 
         with grpc.insecure_channel(addr, options=channel_opt) as channel:
             stub = image_pb2_grpc.image_tranferStub(channel=channel)
-
             response = stub.send_me_image(image_pb2.image_request(model=model, video=video))
             try:
                 for img in response:
