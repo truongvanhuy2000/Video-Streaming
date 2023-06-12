@@ -4,9 +4,15 @@ from videoServer.common import logger
 import cv2
 import os
 
+VIDEO_DIRECTORY = os.getenv('RESOURCE_DIR')
+if VIDEO_DIRECTORY is None:
+    logger._LOGGER.error("Missing env")
+    exit()
+
 class camera_server():
     def __init__(self, video, model) -> None:
-        dir = os.getenv('RESOURCE_DIR') + video + '.mp4'
+        dir = VIDEO_DIRECTORY + video + '.mp4'
+        logger._LOGGER.info(f"Open video from directory: {dir}")
         self.cap = cv2.VideoCapture(dir)
         # self.AImodel = modelProvider.getModel(model)
         if self.cap.isOpened():
