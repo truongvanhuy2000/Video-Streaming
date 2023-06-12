@@ -13,21 +13,23 @@ class grpcClient(clientProtocol):
 
     def waitForServer(self, stub):
         while True:
-            rep = stub.are_you_ready(image_pb2.ready_request(req="READY"))
-            if rep == "READY":
-                logger._LOGGER.info("Server is ready")
-                break
+            try:
+                rep = stub.are_you_ready(image_pb2.ready_request(req="READY"))
+                if rep == "READY":
+                    logger._LOGGER.info("Server is ready")
+                    break
+            except:
+                continue
 
     def request(self, video, model, addr):
         channel_opt = [
                 ("grpc.so_reuseport", 1),
                 ("grpc.use_local_subchannel_pool", 1)
             ]
-        
         logger._LOGGER.info(f"Connect to GRPC server: {addr}")
-
         with grpc.insecure_channel(addr, options=channel_opt) as channel:
             stub = image_pb2_grpc.image_tranferStub(channel=channel)
+            logger._LOGGER.info(f"Wait for server to ready")
             self.waitForServer(stub=stub)
             response = stub.send_me_image(image_pb2.image_request(model=model, video=video))
             try:
