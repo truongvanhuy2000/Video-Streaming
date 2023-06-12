@@ -2,13 +2,13 @@ import os
 from webServer.transportation.protocol.grpcClient import grpcClient
 from webServer.transportation.protocol.httpClient import httpClient
 
-def getTransportMethod(method):
+def getTransportMethod(method, address):
     match method:
         case "GRPC":
-            return grpcClient()
+            return grpcClient(address)
         
         case "HTTP":
-            return httpClient()
+            return httpClient(address)
 
         case "other":
             pass

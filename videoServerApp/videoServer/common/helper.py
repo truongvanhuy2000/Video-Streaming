@@ -1,5 +1,4 @@
 import cv2
-import pybase64
 import numpy as np
 import socket
 

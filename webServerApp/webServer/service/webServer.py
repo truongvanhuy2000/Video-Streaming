@@ -81,10 +81,11 @@ def handleConnectionToService(video, model):
     response = sock.recv(2048).decode()
 
     logger._LOGGER.info(f"Response from server is {response}")
-    videoServerAddress = f"{response}:{VIDEO_SERVER_PORT}"
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
+
+    transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
+    transportMethod.waitForServer()
     try:
-        yield from transportMethod.request(video, model, videoServerAddress)
+        yield from transportMethod.request(video, model)
     except:
         logger._LOGGER.info(f"Send close request to server")
         sock.sendall("CLOSE".encode())
