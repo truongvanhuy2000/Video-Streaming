@@ -26,3 +26,7 @@ runloadbalancer:
 	export BALANCING_ALGORITHM=roundRobin && \
 	export PORT=7654 && \
 	python3 -m loadBalancer
+stackdeploy:
+	docker stack deploy --compose-file docker-compose.yml demo
+rmstack:
+	docker stack rm demo
