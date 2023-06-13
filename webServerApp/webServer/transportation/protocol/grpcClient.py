@@ -16,8 +16,7 @@ class grpcClient(clientProtocol):
 
         self.channel = grpc.insecure_channel(addr, options=channel_opt)
         self.stub = image_pb2_grpc.image_tranferStub(channel=self.channel)
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.waitForServer())
+        asyncio.create_task(self.waitForServer())
 
     async def waitForServer(self):
         while True:
