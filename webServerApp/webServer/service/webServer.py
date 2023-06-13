@@ -5,6 +5,11 @@ from webServer.transportation import protocolProvider
 from webServer.db.persistentData import persistentData
 from webServer.common import logger
 
+import threading
+
+lock = threading.RLock()
+lock.acquire()
+
 # Set up environment variable
 GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
 GRPC_SERVER2 = os.getenv('GRPC_SERVER2')
@@ -82,9 +87,9 @@ def video_feed_four(variable):
 def handleVideoFeed(model, video, addr):
     if status != "start":
         return None
-
+    
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD)
-    logger._LOGGER.info("THREAD BLOCK TEST")
+    
     return Response(transportMethod.request(video=video, 
                                             model=model,
                                             addr=addr),
