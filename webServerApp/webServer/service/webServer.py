@@ -96,8 +96,11 @@ def handleVideoFeed(variable, video):
     logger._LOGGER.info(f"Response from server is {response}")
 
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
-    transportMethod.waitForServer() 
-
+    logger._LOGGER.info(f"THREAD BLOCK TEST")
+    # transportMethod.waitForServer() 
+    while True:
+        pass
+    
     return Response(handleConnectionToService(video=video, 
                                             model=variable,
                                             transportMethod=transportMethod,
