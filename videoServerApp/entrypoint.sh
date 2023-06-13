@@ -8,7 +8,6 @@
 # mount -v $NFS_SERVER_IP:/ /video
 # ls -a /video
 
-sleep 5
 mkdir -p videoServer/resources
 cp -a /video/* videoServer/resources
 

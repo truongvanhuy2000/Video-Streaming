@@ -1,13 +1,10 @@
-# Video Streaming Project
+# Load Balancer investigation for Video Streaming
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![Alt Text](./Image/Screenshot.png)
+![Alt Text](./Image/lookaside.png)
 
-This project is used for create a web server to display videos streamed from a video server. User can choose which model AI to use and how many video window that can be played simultaneously.
-
-This project is created for the purpose of learning only, so read this with the grain of salt. 
-
+This project is based on the code in the main branch, but it now includes a load balancer. For each request on the website, the load balancer creates a new service on a node based on a balancing algorithm. Afterwards, it forwards the information about the new service back to the web server. You can read more about this design in this blog: https://majidfn.com/blog/grpc-load-balancing/ 
 ## Getting Started
 ### Prerequisites
 **NFS Server**
@@ -26,101 +23,75 @@ How to setup docker: https://docs.docker.com/engine/install/ubuntu/
 
 You must setup at least 2 virtual machines cause we gonna setup an swarm environment in docker.
 
+**Docker NFS volume**
+You must set up a nfs volume on every node in the swarm. The configuration for the volume must be like this. You must change the <<NFS_SERVER_IP>> according to your setup. Remember to change this inside the docker compose file
+
+      volumes:
+        nfsvolume:
+          driver: local
+          driver_opts:
+            type: "nfs"
+            o: "addr=<<NFS_SERVER_IP>>,nfsvers=4.1,nolock,soft,rw"
+            device: ":home/huy/Videos"
+          name: "nfsvolume"
+
 ## Installation
-1. Clone this repo
+1. Clone this repo and switch to loadBalancerInvestigation branch
  
         git clone https://github.com/truongvanhuy2000/videoStreaming
+        git checkout loadBalancerInvestigation
 
-2. Change the IP address and mount directory inside of the docker-compose file
+2. Set up a local registry for your swarm
 
-        volumes:
-          nfsvolume:
-              driver: local
-              driver_opts:
-              type: "nfs"
-              o: "addr=<<NFS_SERVER_IP>>,nfsvers=4.1,nolock,soft,rw"
-              device: ":<<MOUNT_DIR>>"
-        
-3. Run the project
+       docker service create --name registry --publish published=3500,target=5000 registry:2
 
-    There are 2 way you can run this project:
-    
-    + **Standlone mode**
+3. Build the image and push to the local registry. Remember to change directory to videoStreaming folder
 
-    In this mode, you will run everything on a single machine
-            
-        docker compose up
-    
-    + **Docker Swarm mode**
+        make build
+        make push
 
-    In this mode, you will run everything on different machine
+3. Deploy to swarm
 
-        docker stack deploy --compose-file docker-compose.yml demo
+        make stackdeploy
 
 4. Access the Website to view streamed video
 
-    By default, the website will be bound to port 8000 of the machine that you ran the command on.
+    By default, the website will be bound to port 5000 of the top manager node.
     The address of the website is:
         
-        <ipaddress>:8000
+        <ipaddress>:5000
     
     **Website Layout**
 
-    I won't explain the functionality of the website so you should try to play around for a little bit.
+    This is basically the same as the one at main branch. Just need to know that each video is corresponding to a service on a node
 
     ![Alt Text](./Image/Screenshot.png)
 
 ## Project Structure
 
-In this part, i will talk briefly about the folder structure of this project and the functionality of its components.
+Aside from the inclusion of LoadBalancerApp, the folder structure of everything else remains largely the same. Therefore, I won't discuss them here, and instead, I recommend you review the main branch for further details.
 
-### Top-level directory layout
-```sh
-.
-├── videoServerApp          # Source code for the video server
-├── webServerApp            # Source code for the web server
-├── ExampleVideo            # Some example video that's displayed on the website
-├── video.env               # Environment variable for video server, you can change protocol and mount directory here
-├── web.env                 # Environment variable for web server, you can used this to change the address of video server
-├── .gitignore
-├── docker-compose.yml
-└── README.md
-```
-  Everything else is self explanatory so im gonna focus on the 2 main components that are **videoServerApp** and **webServerApp**. They are mostly similar in term of components
-
-+ **videoServerApp**
++ **loadBalancerApp**
 
   ```sh
     ├── Dockerfile              # This is used to build the docker image
-    ├── videoServer             # This is where all the magic reside
-    │   ├── aiModel             # Used for loading AI models and use them
-    │   ├── common              # Used for various purpose 
-    │   ├── proto               # Proto file and protobuf API
-    │   ├── service             # Main service of this project, simulate IO read on a camera server
-    │   ├── transportation      # Various type of transportation protocol is stored here
-    │   ├── __init__.py         # Used to indicate that this is a python module
-    │   ├── __main__.py         # :))
-    │   └── app.py              # Used to start the whole thing
-    ├── .dockerignore           # Ignore some unnecessary things 
-    ├── entrypoint.sh           # Script that run at container startup
-    └── requirements.txt        # Python required dependencies
-    ```
-
-+ **webServerApp**
-
-  ```sh
-    ├── Dockerfile              # This is used to build the docker image
-    ├── webServer               # This is where all the magic reside
-    │   ├── db                  # Store the persistance database
+    ├── loadBalancer            # This is where all the magic reside
     │   ├── common              # Used for various purpose
-    │   ├── proto               # Proto file and protobuf API
-    │   ├── service             # Main service of this project, run the website
-    │   ├── transportation      # Various type of transportation protocol is stored here
+    │   ├── service             # This run the load balancer service
+    │   ├── dockerClient        # This will be used for connect to the docker daemon
     │   ├── __init__.py         # Used to indicate that this is a python module
     │   ├── __main__.py         # :))
     │   └── app.py              # Used to start the whole thing
+    ├── test                    # Some basic testing for this, but i didn't touch it that much
     ├── .dockerignore           # Ignore some unnecessary things 
+    ├── Makefile                # Shortcut for some command in here
+    ├── balancer.env            # Some environment variable, you should adjust this based on your need
     └── requirements.txt        # Python required dependencies
+
     ```
 
-    <p align="right">(<a href="#readme-top">back to top</a>)</p>
+## Conclusion
+
+This project is an experimental one, and the results have been quite disappointing. In my setup, I was only able to create six instances of the video server service. The main limitation seems to be the Flask framework. I also attempted to implement the Quart framework, which is an asynchronous version of Flask, but unfortunately, I didn't have any success.
+
+Another issue is that each time a new instance of a service is created, it takes some time for that service to stabilize, causing clients to experience delays. This creates a significant amount of I/O blocking for the web server. Additionally, this might be due to the way Flask is implemented (although this is just speculation).
