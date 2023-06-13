@@ -89,7 +89,9 @@ def handleVideoFeed(model, video, addr):
         return None
     
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD)
-    
+    logger._LOGGER.info("THREAD BLOCK TEST")
+    while True:
+        pass
     return Response(transportMethod.request(video=video, 
                                             model=model,
                                             addr=addr),
