@@ -11,7 +11,7 @@ from webServer.common import logger
 class grpcClient(clientProtocol):
     def __init__(self, addr) -> None:
         channel_opt = [("grpc.so_reuseport", 1), ("grpc.use_local_subchannel_pool", 1)]
-
+        self.serverAddress = addr
         logger._LOGGER.info(f"Connect to GRPC server: {addr}")
 
         self.channel = grpc.insecure_channel(addr, options=channel_opt)
@@ -19,7 +19,7 @@ class grpcClient(clientProtocol):
         asyncio.create_task(self.waitForServer())
 
     async def waitForServer(self):
-        async with grpc.aio.insecure_channel('localhost:1234') as channel:
+        async with grpc.aio.insecure_channel(self.serverAddress) as channel:
             stub = image_pb2_grpc.image_tranferStub(channel=channel)
             while True:
                 try:
