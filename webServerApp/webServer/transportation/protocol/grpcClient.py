@@ -17,10 +17,10 @@ class grpcClient(clientProtocol):
         self.channel = grpc.insecure_channel(addr, options=channel_opt)
         self.stub = image_pb2_grpc.image_tranferStub(channel=self.channel)
 
-    async def waitForServer(self):
+    def waitForServer(self):
         while True:
             try:
-                rep = await self.stub.are_you_ready(image_pb2.ready_request(req="READY"))
+                rep = self.stub.are_you_ready(image_pb2.ready_request(req="READY"))
                 logger._LOGGER.info(f"Server response is {rep.rep}")
                 if rep.rep == "READY":
                     break
