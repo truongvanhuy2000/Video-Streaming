@@ -3,6 +3,7 @@ import os
 
 from webServer.transportation import protocolProvider
 from webServer.db.persistentData import persistentData
+from webServer.common import logger
 
 # Set up environment variable
 GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
@@ -64,34 +65,30 @@ def status():
 
 @app.route('/<variable>/video_feed_one')
 def video_feed_one(variable):
-    if status != "start":
-        return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video1", model=variable, addr=GRPC_SERVER1),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return handleVideoFeed(model=variable, video="video1", addr=GRPC_SERVER1)
 
 @app.route('/<variable>/video_feed_two')
 def video_feed_two(variable):
-    if status != "start":
-        return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video2", model=variable, addr=GRPC_SERVER2),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return handleVideoFeed(model=variable, video="video2", addr=GRPC_SERVER2)
 
 @app.route('/<variable>/video_feed_three')
 def video_feed_three(variable):
-    if status != "start":
-        return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video3", model=variable, addr=GRPC_SERVER3),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return handleVideoFeed(model=variable, video="video3", addr=GRPC_SERVER3)
 
 @app.route('/<variable>/video_feed_four')
 def video_feed_four(variable):
+    return handleVideoFeed(model=variable, video="video4" ,addr=GRPC_SERVER4)
+
+def handleVideoFeed(model, video, addr):
     if status != "start":
         return None
-    transportMethod = protocolProvider.getTransportMethod(TRANSPORT_METHOD)
-    return Response(transportMethod.request(video="video4", model=variable, addr=GRPC_SERVER4),
+
+    transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD)
+    logger._LOGGER.info("THREAD BLOCK TEST")
+    return Response(transportMethod.request(video=video, 
+                                            model=model,
+                                            addr=addr),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
 def runWebServer():
     app.run(host="0.0.0.0", debug=False)

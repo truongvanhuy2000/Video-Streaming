@@ -1,21 +1,33 @@
-from videoServer.common import helper
 from videoServer.aiModel import modelProvider
+from videoServer.common import logger
+
 import cv2
+import os
+
+VIDEO_DIRECTORY = os.getenv('RESOURCE_DIR')
+if VIDEO_DIRECTORY is None:
+    logger._LOGGER.error("Missing env")
+    exit()
 
 class camera_server():
     def __init__(self, video, model) -> None:
-        # dir = '/home/huy/Videos/' + video +'.mp4'
-        dir = 'videoServer/resources/' + video + '.mp4'
+        dir = VIDEO_DIRECTORY + video + '.mp4'
+        logger._LOGGER.info(f"Open video from directory: {dir}")
         self.cap = cv2.VideoCapture(dir)
         # self.AImodel = modelProvider.getModel(model)
-    
+        if self.cap.isOpened():
+            # Video is successfully opened
+            logger._LOGGER.info("Video successfully read")
+        else:
+            # Failed to open the video
+            logger._LOGGER.error("Failed to read video")
+            exit()
+
     def humanDetect(self):
-        # Display the resulting frame
-        # initialize the HOG descriptor
         try:
             ret, frame = self.cap.read()
         except:
-            print("something wrong here")
+            logger._LOGGER.error("something wrong here")
         if ret == False:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             ret, frame = self.cap.read()
