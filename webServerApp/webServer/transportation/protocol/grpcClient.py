@@ -21,7 +21,6 @@ class grpcClient(clientProtocol):
     async def waitForServer(self):
         while True:
             try:
-                logger._LOGGER.info(f"Start waiting for server response")
                 rep = await self.stub.are_you_ready(image_pb2.ready_request(req="READY"))
                 logger._LOGGER.info(f"Server response is {rep.rep}")
                 if rep.rep == "READY":

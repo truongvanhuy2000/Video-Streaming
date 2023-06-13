@@ -80,7 +80,7 @@ def handleConnectionToService(video, model, transportMethod, sock):
         sock.sendall("CLOSE".encode())
         sock.close()
 
-def handleVideoFeed(variable, video):
+async def handleVideoFeed(variable, video):
     if status != "start":
         return None
     # Print the thread identifier
@@ -94,7 +94,7 @@ def handleVideoFeed(variable, video):
     logger._LOGGER.info(f"Response from server is {response}")
 
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
-    transportMethod.waitForServer()
+    await transportMethod.waitForServer()
 
     return Response(handleConnectionToService(video=video, 
                                             model=variable,
