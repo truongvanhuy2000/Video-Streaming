@@ -73,19 +73,7 @@ def video_feed_three(variable):
 def video_feed_four(variable):
     return handleVideoFeed(variable=variable, video="video4")
 
-def handleConnectionToService(video, model, transportMethod, sock):
-
-    try:
-        yield from transportMethod.request(video, model)
-    except:
-        logger._LOGGER.info(f"Send close request to server")
-        sock.sendall("CLOSE".encode())
-        sock.close()
-
-def handleVideoFeed(variable, video):
-    if status != "start":
-        return None
-    # Print the thread identifier
+def handleConnectionToService(video, model):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     logger._LOGGER.info(f"Try to connect to loadbalancer:{LOAD_BALANCER_PORT}")
 
@@ -97,10 +85,19 @@ def handleVideoFeed(variable, video):
 
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
     transportMethod.waitForServer()
+    try:
+        yield from transportMethod.request(video, model)
+    except:
+        logger._LOGGER.info(f"Send close request to server")
+        sock.sendall("CLOSE".encode())
+        sock.close()
+
+def handleVideoFeed(variable, video):
+    if status != "start":
+        return None
+    # Print the thread identifier
     return Response(handleConnectionToService(video=video, 
-                                            model=variable,
-                                            transportMethod=transportMethod,
-                                            sock=sock),
+                                            model=variable),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def runWebServer():
