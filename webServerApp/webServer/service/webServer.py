@@ -6,9 +6,13 @@ from webServer.db.persistentData import persistentData
 from webServer.common import logger
 
 import threading
+import asyncio
 
-lock = threading.RLock()
-lock.acquire()
+async def simulateIOblock():
+    logger._LOGGER.info("SIMULATE IO BLOCKING")
+    await asyncio.sleep(10)
+    logger._LOGGER.info("DONE IO BLOCKING")
+
 
 # Set up environment variable
 GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
@@ -89,9 +93,6 @@ def handleVideoFeed(model, video, addr):
         return None
     
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD)
-    logger._LOGGER.info("THREAD BLOCK TEST")
-    while True:
-        pass
     return Response(transportMethod.request(video=video, 
                                             model=model,
                                             addr=addr),
