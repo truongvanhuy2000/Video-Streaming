@@ -82,7 +82,7 @@ def handleConnectionToService(video, model, transportMethod, sock):
         sock.sendall("CLOSE".encode())
         sock.close()
 
-async def handleVideoFeed(variable, video):
+def handleVideoFeed(variable, video):
     if status != "start":
         return None
     # Print the thread identifier
