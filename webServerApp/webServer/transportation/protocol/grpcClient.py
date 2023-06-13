@@ -19,14 +19,8 @@ class grpcClient(clientProtocol):
         asyncio.create_task(self.waitForServer())
 
     async def waitForServer(self):
-        while True:
-            try:
-                rep = await self.stub.are_you_ready(image_pb2.ready_request(req="READY"))
-                logger._LOGGER.info(f"Server response is {rep.rep}")
-                if rep.rep == "READY":
-                    break
-            except:
-                continue
+        rep = await self.stub.are_you_ready(image_pb2.ready_request(req="READY"))
+        logger._LOGGER.info(f"Server response is {rep.rep}")
 
     def request(self, video, model):            
         logger._LOGGER.info(f"Start Requesting image")
