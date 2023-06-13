@@ -19,6 +19,8 @@ if any(var is None for var in [VIDEO_SERVER_PORT, TRANSPORT_METHOD, LOAD_BALANCE
     exit()
 
 app = Flask(__name__)
+loop = asyncio.get_event_loop()
+
 status = None
 
 @app.route('/', methods=['POST', 'GET'])
@@ -94,7 +96,7 @@ async def handleVideoFeed(variable, video):
     logger._LOGGER.info(f"Response from server is {response}")
 
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
-    await transportMethod.waitForServer()
+    loop.run_until_complete(transportMethod.waitForServer()) 
 
     return Response(handleConnectionToService(video=video, 
                                             model=variable,
