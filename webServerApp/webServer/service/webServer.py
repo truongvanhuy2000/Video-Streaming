@@ -57,7 +57,7 @@ async def status():
     form = await request.form
     action = form.get('action')
     status = "start" if action == "start" else "stop"
-    return await redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 @app.route('/<variable>/video_feed_one')
 async def video_feed_one(variable):
