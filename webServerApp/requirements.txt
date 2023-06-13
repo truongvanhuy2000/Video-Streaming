@@ -1,4 +1,4 @@
-flask==2.3.2
+quart==0.18.4
 grpcio==1.54.2
 numpy==1.24.3
 opencv-python-headless==4.7.0.72
