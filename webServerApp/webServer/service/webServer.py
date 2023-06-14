@@ -101,5 +101,5 @@ def handleVideoFeed(variable, video):
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def runWebServer():
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="0.0.0.0", debug=False, )
     
