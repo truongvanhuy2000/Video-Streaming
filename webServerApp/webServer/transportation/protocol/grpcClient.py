@@ -28,49 +28,49 @@ class grpcClient(clientProtocol):
             except:
                 continue
 
-    # def request(self, video, model):            
-    #     logger._LOGGER.info(f"Start Requesting image")
-    #     response = self.stub.send_me_image(image_pb2.image_request(model=model, video=video))
-    #     try:
-    #         for img in response:
-    #             frame = deserializeTheImage(img.image_sent.data)
-    #             ret, buffer = cv2.imencode('.jpg', frame)
-    #             frame = buffer.tobytes()
-    #             # Yield the frame in byte format
-    #             yield (b'--frame\r\n'
-    #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-    #     except:
-    #         response.cancel()
-    #         logger._LOGGER.info("Done Streaming")
-    #         self.stub.ack(image_pb2.ack_request(req="done video"))
-    #         self.channel.close()
-
     def request(self, video, model):            
         logger._LOGGER.info(f"Start Requesting image")
-        imageGenerator = generate_random_black_image()
+        response = self.stub.send_me_image(image_pb2.image_request(model=model, video=video))
         try:
-            for frame in imageGenerator:
+            for img in response:
+                frame = deserializeTheImage(img.image_sent.data)
                 ret, buffer = cv2.imencode('.jpg', frame)
                 frame = buffer.tobytes()
                 # Yield the frame in byte format
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         except:
+            response.cancel()
             logger._LOGGER.info("Done Streaming")
             self.stub.ack(image_pb2.ack_request(req="done video"))
             self.channel.close()
 
+    # def request(self, video, model):            
+    #     logger._LOGGER.info(f"Start Requesting image")
+    #     imageGenerator = generate_random_black_image()
+    #     try:
+    #         for frame in imageGenerator:
+    #             ret, buffer = cv2.imencode('.jpg', frame)
+    #             frame = buffer.tobytes()
+    #             # Yield the frame in byte format
+    #             yield (b'--frame\r\n'
+    #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    #     except:
+    #         logger._LOGGER.info("Done Streaming")
+    #         self.stub.ack(image_pb2.ack_request(req="done video"))
+    #         self.channel.close()
+
     def response(self):
         pass
 
-def generate_random_black_image():
-    while True:
-        # Generate random width and height
-        width = random.randint(10, 20)
-        height = random.randint(10, 50)
+# def generate_random_black_image():
+#     while True:
+#         # Generate random width and height
+#         width = random.randint(10, 20)
+#         height = random.randint(10, 50)
 
-        # Create an empty black image
-        image = np.zeros((height, width, 3), np.uint8)
+#         # Create an empty black image
+#         image = np.zeros((height, width, 3), np.uint8)
 
-        # Yield the random black image
-        yield image
+#         # Yield the random black image
+#         yield image
