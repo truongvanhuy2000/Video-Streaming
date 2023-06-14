@@ -1,4 +1,4 @@
-from webServer.service import  webServer
+from webServer.service.webServer import  app
 
 def run():
-    webServer.runWebServer()
+    app.run(host="0.0.0.0", debug=False, )

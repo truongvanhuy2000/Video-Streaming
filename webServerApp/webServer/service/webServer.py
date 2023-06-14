@@ -99,7 +99,4 @@ def handleVideoFeed(variable, video):
     return Response(handleConnectionToService(video=video, 
                                             model=variable),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-def runWebServer():
-    app.run(host="0.0.0.0", debug=False, )
     
