@@ -14,6 +14,15 @@ runwebserver:
 	export GRPC_SERVER4=0.0.0.0:9876 && \
 	export TRANSPORT_METHOD=GRPC && \
 	python3 -m webServer
+
+gunicornWebServer:
+	@cd webServerApp && \
+	export GRPC_SERVER1=0.0.0.0:9876 && \
+	export GRPC_SERVER2=0.0.0.0:9876 && \
+	export GRPC_SERVER3=0.0.0.0:9876 && \
+	export GRPC_SERVER4=0.0.0.0:9876 && \
+	export TRANSPORT_METHOD=GRPC && \
+	gunicorn --workers 10 --threads 4 --bind 0.0.0.0:5000 webServer.app:app
 	
 runvideoserver:
 	@cd videoServerApp && \

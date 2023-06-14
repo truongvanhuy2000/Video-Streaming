@@ -5,27 +5,12 @@ from webServer.transportation import protocolProvider
 from webServer.db.persistentData import persistentData
 from webServer.common import logger
 
-import threading
-import asyncio
-
-async def simulateIOblock():
-    logger._LOGGER.info("SIMULATE IO BLOCKING")
-    await asyncio.sleep(10)
-    logger._LOGGER.info("DONE IO BLOCKING")
-
-
 # Set up environment variable
 GRPC_SERVER1 = os.getenv('GRPC_SERVER1')
 GRPC_SERVER2 = os.getenv('GRPC_SERVER2')
 GRPC_SERVER3 = os.getenv('GRPC_SERVER3')
 GRPC_SERVER4 = os.getenv('GRPC_SERVER4')
 TRANSPORT_METHOD = os.getenv('TRANSPORT_METHOD')
-
-# GRPC_SERVER1 = '192.168.42.63:9876'
-# GRPC_SERVER2 = '192.168.42.63:9876'
-# GRPC_SERVER3 = '192.168.42.63:9876'
-# GRPC_SERVER4 = '192.168.42.63:9876'
-# TRANSPORT_METHOD = 'GRPC'
 
 if (GRPC_SERVER1 is None) and (GRPC_SERVER2 is None) and (GRPC_SERVER3 is None) and (GRPC_SERVER4 is None) and (TRANSPORT_METHOD is None): 
     print("Missing environment variable")
@@ -97,6 +82,3 @@ def handleVideoFeed(model, video, addr):
                                             model=model,
                                             addr=addr),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-def runWebServer():
-    app.run(host="0.0.0.0", debug=False)

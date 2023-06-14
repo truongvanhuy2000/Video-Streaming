@@ -9,10 +9,8 @@ class persistentData:
             with open(self.fileDir, 'r') as file:
                 data = json.load(file)
                 if not data:
-                    print("The JSON file is empty.")
                     return True
                 else:
-                    print("The JSON file is not empty.")
                     return False
         except:
             return True
