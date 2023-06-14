@@ -86,17 +86,28 @@ def handleConnectionToService(video, model):
     transportMethod = protocolProvider.getTransportMethod(method=TRANSPORT_METHOD, address=f"{response}:{VIDEO_SERVER_PORT}")
     transportMethod.waitForServer()
     try:
-        yield from transportMethod.request(video, model)
+        # yield from transportMethod.request(video, model)
+        yield from generate_random_numbers()
     except:
         logger._LOGGER.info(f"Send close request to server")
         sock.sendall("CLOSE".encode())
         sock.close()
+        
+import random
+def generate_random_numbers():
+    while True:
+        yield random.randint(1, 100)
+
+def generate_numbers():
+    for number in generate_random_numbers():
+        yield f"data: {number}\n\n"
 
 def handleVideoFeed(variable, video):
     if status != "start":
         return None
     # Print the thread identifier
-    return Response(handleConnectionToService(video=video, 
-                                            model=variable),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_numbers(), mimetype='text/event-stream')
+    # return Response(handleConnectionToService(video=video, 
+    #                                         model=variable),
+    #                 mimetype='multipart/x-mixed-replace; boundary=frame')
     
