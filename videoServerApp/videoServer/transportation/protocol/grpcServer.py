@@ -34,7 +34,7 @@ class imageTranfer(image_pb2_grpc.image_tranferServicer):
                     dot += "."
                     continue
                 dot += " "
-            print("Sending image" + dot, end='\r')
+            logger._LOGGER.info("Sending image" + dot, end='\r')
             count += 1
             if count == 4: 
                 count = 0
