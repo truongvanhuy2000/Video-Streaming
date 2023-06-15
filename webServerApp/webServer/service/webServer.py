@@ -94,8 +94,8 @@ def handleConnectionToService(video, model):
         sock.close()
 
 def handleVideoFeed(variable, video):
-    if status != "start":
-        return None
+    # if status != "start":
+    #     return None
     # Print the thread identifier
     # return Response(generate_numbers(), mimetype='text/event-stream')
     return Response(handleConnectionToService(video=video, 
