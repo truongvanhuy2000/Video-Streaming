@@ -12,7 +12,6 @@ if VIDEO_DIRECTORY is None:
 class camera_server():
     def __init__(self, video, model) -> None:
         dir = VIDEO_DIRECTORY + video + '.mp4'
-        logger._LOGGER.info(f"Open video from directory: {dir}")
         self.cap = cv2.VideoCapture(dir)
         # self.AImodel = modelProvider.getModel(model)
         if self.cap.isOpened():
@@ -26,7 +25,6 @@ class camera_server():
     def humanDetect(self):
         try:
             ret, frame = self.cap.read()
-            
         except:
             logger._LOGGER.error("something wrong here")
         if ret == False:
@@ -41,3 +39,4 @@ class camera_server():
     
     def close(self):
         self.cap.release()
+

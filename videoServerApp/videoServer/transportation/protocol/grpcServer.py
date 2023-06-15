@@ -23,8 +23,22 @@ class imageTranfer(image_pb2_grpc.image_tranferServicer):
         client_port = context.peer().split(':')[2]
         logger._LOGGER.info(f"{client_ip}:{client_port} request video: {request.video} with model: {request.model}")
 
+        count = 0
+
         self.camera = camera_server(model=request.model, video=request.video)
         while True:
+
+            dot = ""
+            for i in range(4):
+                if i < count:
+                    dot += "."
+                    continue
+                dot += " "
+            print("Sending image" + dot, end='\r', flush=True)
+            count += 1
+            if count == 4: 
+                count = 0
+
             frame = self.camera.humanDetect()
             byteStream = helper.serializeTheImage(frame)
             img = image_pb2.image(data=byteStream)
