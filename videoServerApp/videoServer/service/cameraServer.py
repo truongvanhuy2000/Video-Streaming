@@ -26,8 +26,6 @@ class camera_server():
     def humanDetect(self):
         try:
             ret, frame = self.cap.read()
-
-            
         except:
             logger._LOGGER.error("something wrong here")
         if ret == False:
