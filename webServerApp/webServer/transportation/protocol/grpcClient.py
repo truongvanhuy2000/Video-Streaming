@@ -1,7 +1,5 @@
 import grpc
 import cv2
-import numpy as np
-import random
 
 from webServer.proto import image_pb2, image_pb2_grpc
 from webServer.common.helper import deserializeTheImage
@@ -45,32 +43,8 @@ class grpcClient(clientProtocol):
             self.stub.ack(image_pb2.ack_request(req="done video"))
             self.channel.close()
 
-    # def request(self, video, model):            
-    #     logger._LOGGER.info(f"Start Requesting image")
-    #     imageGenerator = generate_random_black_image()
-    #     try:
-    #         for frame in imageGenerator:
-    #             ret, buffer = cv2.imencode('.jpg', frame)
-    #             frame = buffer.tobytes()
-    #             # Yield the frame in byte format
-    #             yield (b'--frame\r\n'
-    #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-    #     except:
-    #         logger._LOGGER.info("Done Streaming")
-    #         self.stub.ack(image_pb2.ack_request(req="done video"))
-    #         self.channel.close()
-
     def response(self):
         pass
 
-# def generate_random_black_image():
-#     while True:
-#         # Generate random width and height
-#         width = random.randint(10, 20)
-#         height = random.randint(10, 50)
 
-#         # Create an empty black image
-#         image = np.zeros((height, width, 3), np.uint8)
-
-#         # Yield the random black image
-#         yield image
+            

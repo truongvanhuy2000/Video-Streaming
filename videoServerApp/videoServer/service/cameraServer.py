@@ -26,13 +26,14 @@ class camera_server():
     def humanDetect(self):
         try:
             ret, frame = self.cap.read()
+            
         except:
             logger._LOGGER.error("something wrong here")
         if ret == False:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             ret, frame = self.cap.read()
         # self.AImodel.detect(frame)
-        frame = cv2.resize(frame, (0,0), fx=0.01, fy=0.01) 
+        frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5) 
         return frame
     
     def isOpen(self) -> bool:
