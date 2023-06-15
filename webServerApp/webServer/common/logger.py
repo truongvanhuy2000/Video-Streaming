@@ -2,7 +2,7 @@ import logging
 import sys
 
 _LOGGER = logging.getLogger("HuyLog")
-logging.getLogger('werkzeug').disabled = True
+# logging.getLogger('werkzeug').disabled = True
 
 def setUpLogging():
     handler = logging.StreamHandler(sys.stdout)
