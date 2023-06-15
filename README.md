@@ -89,9 +89,3 @@ Aside from the inclusion of LoadBalancerApp, the folder structure of everything 
     └── requirements.txt        # Python required dependencies
 
     ```
-
-## Conclusion
-
-This project is an experimental one, and the results have been quite disappointing. In my setup, I was only able to create six instances of the video server service. The main limitation seems to be the Flask framework. I also attempted to implement the Quart framework, which is an asynchronous version of Flask, but unfortunately, I didn't have any success.
-
-Another issue is that each time a new instance of a service is created, it takes some time for that service to stabilize, causing clients to experience delays. This creates a significant amount of I/O blocking for the web server. Additionally, this might be due to the way Flask is implemented (although this is just speculation).
