@@ -87,7 +87,6 @@ def handleConnectionToService(video, model):
     transportMethod.waitForServer()
     try:
         yield from transportMethod.request(video, model)
-        # yield from generate_random_numbers()
     except:
         logger._LOGGER.info(f"Send close request to server")
         sock.sendall("CLOSE".encode())
