@@ -20,12 +20,6 @@ runvideoserver:
 	export TRANSPORT_METHOD=GRPC && \
 	python3 -m videoServer
 
-runloadbalancer:
-	@cd loadBalancerApp && \
-	export DOCKER_DAEMON=192.168.56.20:2375 && \
-	export BALANCING_ALGORITHM=roundRobin && \
-	export PORT=7654 && \
-	python3 -m loadBalancer
 stackdeploy:
 	docker stack deploy --compose-file docker-compose.yml demo
 rmstack:

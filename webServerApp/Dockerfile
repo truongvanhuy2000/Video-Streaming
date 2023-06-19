@@ -6,5 +6,4 @@ COPY . /app
 
 EXPOSE 5000
 
-# CMD ["python3", "-m", "gunicorn", "--workers", "12", "--bind", "0.0.0.0:5000", "webServer.app:app"]
 CMD ["python3", "-m", "webServer"]
