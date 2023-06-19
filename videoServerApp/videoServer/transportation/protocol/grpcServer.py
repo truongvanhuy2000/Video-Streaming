@@ -25,7 +25,6 @@ class imageTranfer(image_pb2_grpc.image_tranferServicer):
 
         self.camera = camera_server(model=request.model, video=request.video)
         while True:
-            logger._LOGGER.info("Sending data frame")
             frame = self.camera.humanDetect()
             byteStream = helper.serializeTheImage(frame)
             img = image_pb2.image(data=byteStream)
