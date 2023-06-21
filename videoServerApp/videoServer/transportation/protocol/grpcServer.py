@@ -34,7 +34,7 @@ class imageTranfer(image_pb2_grpc.image_tranferServicer):
         if (request.req == "done video"):
             self.camera.close()
             logger._LOGGER.info("close video")
-
+            
         return image_pb2.ack_response(rep="ok")
 
 class grpcServer(protocolServer):
