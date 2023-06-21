@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/webServer/__main__.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}",
+                "GRPC_SERVER1" : "0.0.0.0:9876",
+                "GRPC_SERVER2" : "0.0.0.0:9876",
+                "GRPC_SERVER3" : "0.0.0.0:9876",
+                "GRPC_SERVER4" : "0.0.0.00:9876",
+                "TRANSPORT_METHOD" : "GRPC"
+              }
+        }
+    ]
+}
