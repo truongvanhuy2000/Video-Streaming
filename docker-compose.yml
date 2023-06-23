@@ -7,7 +7,7 @@ services:
     networks:
       - cat
     env_file:
-      - videoServerApp/video.env
+      - Env/video.env
     privileged: true
     volumes:
       - type: volume
@@ -27,7 +27,7 @@ services:
     networks:
       - cat
     env_file:
-      - videoServerApp/video.env
+      - Env/video.env
     privileged: true
     volumes:
       - type: volume
@@ -47,7 +47,7 @@ services:
     networks:
       - cat
     env_file:
-      - videoServerApp/video.env
+      - Env/video.env
     privileged: true
     volumes:
       - type: volume
@@ -67,7 +67,7 @@ services:
     networks:
       - cat
     env_file:
-      - videoServerApp/video.env
+      - Env/video.env
     privileged: true
     volumes:
       - type: volume
@@ -88,7 +88,7 @@ services:
       - "5000:5000"
     restart: unless-stopped
     env_file:
-      - webServerApp/web.env
+      - Env/web.env
     networks:
       - cat
     deploy:
