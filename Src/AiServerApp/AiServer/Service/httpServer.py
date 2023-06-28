@@ -34,8 +34,7 @@ def handleRequest():
     return Response(content_type='application/json', response=response, status=200)
 
 def flaskHandler():
-    _LOGGER.info("Http Server is running")
-
+    _LOGGER.info(f"Http Server is running at: {HTTPSERVER_HOST}:{HTTPSERVER_PORT}")
     app.run(host=HTTPSERVER_HOST,
             port=HTTPSERVER_PORT, 
             debug=False)

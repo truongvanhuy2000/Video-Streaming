@@ -107,5 +107,5 @@ def handleRequest():
     return Response(response=frame, status=200)
 
 def serve():
-    _LOGGER.info("Http Server is running")
+    _LOGGER.info(f"Http Server is running at: {HTTPSERVER_HOST}:{HTTPSERVER_PORT}")
     app.run(host=HTTPSERVER_HOST, port=HTTPSERVER_PORT, debug=False)
