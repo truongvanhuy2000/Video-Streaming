@@ -152,17 +152,17 @@ services:
   #   depends_on:
   #     - rabbitmq
   
-  # database:
-  #   image: redis:alpine
-  #   container_name: database
-  #   restart: unless-stopped
-  #   networks:
-  #     - cat
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints: [node.role == manager]
+  database:
+    image: redis:alpine
+    container_name: database
+    restart: unless-stopped
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
   
   rabbitmq:
     image: rabbitmq:latest
