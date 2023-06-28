@@ -3,7 +3,7 @@ website:
   port: 5000
 
 loadbalancer:
-  host: "videoserverapp"
+  host: "videoserver"
   port: 6000
   transport:
     method: "HTTP"

@@ -5,7 +5,7 @@ httpserver:
 
 # This is the address that will lead you to Ai Server
 loadbalancer:
-  host: "aiserverapp"
+  host: "aiserver"
   port: 7000
   transport:
     method: "HTTP"
@@ -18,7 +18,7 @@ database:
   port: 6379
 
 logging:
-  level: "ERROR"
+  level: "INFO"
 
 # This lead to rabbitmq
 rabbitmq:
