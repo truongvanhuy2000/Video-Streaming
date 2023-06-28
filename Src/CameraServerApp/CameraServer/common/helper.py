@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import base64
 
 def deserializeTheImage(byte):
     im_arr = np.frombuffer(byte, dtype=np.uint8)  # im_arr is one-dim Numpy array
@@ -10,3 +11,11 @@ def serializeTheImage(image):
     img = cv2.imencode('.jpeg', image, encode_param)[1].tobytes()
     return img
 
+def encodeToString(data:bytes):
+    encoded = base64.b64encode(data).decode('ascii')
+    return encoded
+
+def decodeToByte(data:str):
+    encodedFrame = data.encode('ascii')
+    frame = base64.b64decode(encodedFrame)
+    return frame

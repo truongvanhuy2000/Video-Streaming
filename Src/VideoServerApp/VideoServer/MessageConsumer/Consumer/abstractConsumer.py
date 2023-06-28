@@ -8,3 +8,7 @@ class abstractConsumer(ABC):
     @abstractmethod
     def createTopic(self, **kwargs):
         pass
+
+    @abstractmethod
+    def closeConnection(self):
+        pass

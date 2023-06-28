@@ -6,4 +6,4 @@ COPY . /app
 
 EXPOSE 5000
 
-CMD ["python3", "-m", "webServer"]
+CMD ["python3", "-m", "WebServer"]

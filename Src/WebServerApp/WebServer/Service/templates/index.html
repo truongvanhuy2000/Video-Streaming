@@ -1,0 +1,46 @@
+{% extends 'base.html' %} 
+{% block head %}
+{% endblock %} 
+
+{% block body %}
+<div id="main">
+  {% if status == "start" %}
+    {% for index in range(views)%} 
+    <div class="category-{{index}}">
+        <h1>Video Streaming {{index}} {{model}}</h1>
+        <img src="{{ url_for(video_feeds[index], variable=model) }}" width="640" height="320">
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>
+<div class="container">
+  <div class="choosingModelForm">
+
+    <form action="/" method="post">
+      <label for="Model">Choose a model:</label>
+      <select name="Model" id="Model">
+        <option value="haarcascade_frontalface" {% if model == "haarcascade_frontalface"%} selected {% endif %}>haarcascade_frontalface</option>
+        <option value="mobilenetssd" {% if model == "mobilenetssd"%} selected {% endif %}>mobilenetssd</option>
+        <option value="YOLOv3" {% if model == "YOLOv3"%} selected {% endif %}>YOLOv3</option>
+      </select>
+      <br><br>
+      <label for="View">Number of views:</label>
+      <select name="View" id="View">
+        <option value=1 {% if views == 1%} selected {% endif %}>1</option>
+        <option value=2 {% if views == 2%} selected {% endif %}>2</option>
+        <option value=3 {% if views == 3%} selected {% endif %}>3</option>
+        <option value=4 {% if views == 4%} selected {% endif %}>4</option>
+      </select>
+      <input type="submit" value="Submit">
+    </form>
+
+    <form action="/status" method="post">
+      <button name="action" value="start">Start</button>
+      <button name="action" value="stop">Stop</button>
+    </form>
+    
+  
+  </div>
+
+</div>
+{% endblock %} 

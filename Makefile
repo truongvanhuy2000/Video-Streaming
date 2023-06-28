@@ -9,22 +9,21 @@ push:
 
 runwebserver:
 	@cd Src/WebServerApp && \
-	export TRANSPORT_METHOD=GRPC && \
-	export LOAD_BALANCER_PORT=7654 && \
-	python3 -m webServer
+	python3 -m WebServer
 
 runcameraserver:
 	@cd Src/CameraServerApp && \
-	export RESOURCE_DIR='cameraServer/resources/video1.mp4' && \
+	export RESOURCE='video3.mp4' && \
 	export CAMERA_NAME='camera1' && \
-	export RABBITMQ_HOST='localhost' && \
-	python3 -m cameraServer
+	python3 -m CameraServer
 
 runvideoserver:
 	@cd Src/VideoServerApp && \
-	export RESOURCE_DIR=/home/huy/Videos/ && \
-	export TRANSPORT_METHOD=GRPC && \
-	python3 -m videoServer
+	python3 -m VideoServer
+
+runaiserver:
+	@cd Src/AiServerApp && \
+	python3 -m AiServer
 
 stackdeploy:
 	docker stack deploy --compose-file docker-compose.yml demo

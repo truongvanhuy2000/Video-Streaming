@@ -4,5 +4,4 @@ WORKDIR /app
 RUN pip install --no-cache-dir -r  requirements.txt
 COPY . /app
 
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["python3", "-m", "VideoServer"]

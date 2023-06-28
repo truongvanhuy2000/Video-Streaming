@@ -1,94 +1,47 @@
 version: "3"
 
 services:
-  videoserver1:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - Env/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
+  videoserver:
+    # image: 127.0.0.1:3500/videoserverapp
+    build: Src/VideoServerApp/
 
-  videoserver2:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
+    container_name: videoserverapp
+    restart: unless-stopped
     networks:
       - cat
-    env_file:
-      - Env/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints: [node.role == worker]
-
-  videoserver3:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - Env/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-        
-  videoserver4:
-    image: 127.0.0.1:3500/videoserverapp
-    # build: videoServerApp
-    networks:
-      - cat
-    env_file:
-      - Env/video.env
-    privileged: true
-    volumes:
-      - type: volume
-        source: nfsvolume
-        target: /video/
-        volume:
-          nocopy: true
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
+    depends_on:
+      - database
+      - rabbitmq
 
   webserver:
-    image: 127.0.0.1:3500/webserverapp
-    # build: webServerApp
+    # image: 127.0.0.1:3500/webserverapp
+    build: Src/WebServerApp/
+
+    container_name: webserverapp
     ports:
       - "5000:5000"
     restart: unless-stopped
-    env_file:
-      - Env/web.env
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    depends_on:
+      - database
+
+  aiserver:
+    # image: 127.0.0.1:3500/aiserverapp
+    build: Src/AiServerApp/
+
+    container_name: aiserverapp
+    restart: unless-stopped
     networks:
       - cat
     deploy:
@@ -97,9 +50,15 @@ services:
       placement:
         constraints: [node.role == manager]
   
-  loadbalancer:
-    image: 127.0.0.1:3500/loadbalancerapp
+  cameraserver1:
+    # image: 127.0.0.1:3500/cameraserverapp
+    build: Src/CameraServerApp/
+
+    container_name: cameraserverapp1
     restart: unless-stopped
+    environment:
+      - RESOURCE=video1.mp4
+      - CAMERA_NAME=camera1
     networks:
       - cat
     deploy:
@@ -107,19 +66,93 @@ services:
       replicas: 1
       placement:
         constraints: [node.role == manager]
+    depends_on:
+      - rabbitmq
+    
+  cameraserver2:
+    # image: 127.0.0.1:3500/cameraserverapp
+    build: Src/CameraServerApp/
+
+    container_name: cameraserverapp2
+    restart: unless-stopped
+    environment:
+      - RESOURCE=video2.mp4
+      - CAMERA_NAME=camera2
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    depends_on:
+      - rabbitmq
+  
+  cameraserver3:
+    # image: 127.0.0.1:3500/cameraserverapp
+    build: Src/CameraServerApp/
+
+    container_name: cameraserverapp3
+    restart: unless-stopped
+    environment:
+      - RESOURCE=video3.mp4
+      - CAMERA_NAME=camera3
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    depends_on:
+      - rabbitmq
+  
+  cameraserver4:
+    # image: 127.0.0.1:3500/cameraserverapp
+    build: Src/CameraServerApp/
+    container_name: cameraserverapp4
+    restart: unless-stopped
+    environment:
+      - RESOURCE=video4.mp4
+      - CAMERA_NAME=camera4
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+    depends_on:
+      - rabbitmq
+  
+  database:
+    image: redis:alpine
+    container_name: database
+    restart: unless-stopped
+    networks:
+      - cat
+  
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: unless-stopped
+    networks:
+      - cat
+    
+  # loadbalancer:
+  #   image: 127.0.0.1:3500/loadbalancerapp
+  #   restart: unless-stopped
+  #   networks:
+  #     - cat
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == manager]
 
 networks:
   cat:
     name: cat
     ipam:
       driver: default
-
-volumes:
-  nfsvolume:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.56.1,nfsvers=4.1,nolock,soft,rw"
-      device: ":home/huy/Videos"
-    name: "nfsvolume"
   

@@ -1,24 +1,25 @@
-from CameraServer.common import logger
+from CameraServer.common.logger import _LOGGER
 
 import cv2
 import os
 
 class camera_server():
     def __init__(self, video) -> None:
+        _LOGGER.info(video)
         self.cap = cv2.VideoCapture(video)
         if self.cap.isOpened():
             # Video is successfully opened
-            logger._LOGGER.info("Video successfully read")
+            _LOGGER.info("Video successfully read")
         else:
             # Failed to open the video
-            logger._LOGGER.error("Failed to read video")
+            _LOGGER.error("Failed to read video")
             exit()
 
     def readVideo(self):
         try:
             ret, frame = self.cap.read()
         except:
-            logger._LOGGER.error("Something wrong here")
+            _LOGGER.error("Something wrong here")
             exit(0)
 
         if ret == False:
@@ -38,7 +39,6 @@ class camera_server():
                 case 'fps':
                     info = self.cap.get(cv2.CAP_PROP_FPS)
             metadata[parameter] = info
-
         return metadata
     
     def isOpen(self) -> bool:

@@ -1,13 +1,20 @@
 from VideoServer.MessageConsumer.Consumer.abstractConsumer import abstractConsumer
-from VideoServer.common import logger
+from VideoServer.common.logger import _LOGGER
 
 import pika
+import time
 
 class rabbitMQConsumer(abstractConsumer):
     def __init__(self, host) -> None:
         self.host = host
-
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host))
+        while True:
+            try:
+                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host))
+            except Exception as e:
+                time.sleep(1)
+                continue
+            break
+        _LOGGER.info(f"Connect to Rabbit MQ at {host}")
         self.channel = self.connection.channel()
 
         self.exchanges = []
@@ -15,39 +22,42 @@ class rabbitMQConsumer(abstractConsumer):
     
     def createTopic(self, **kwargs):
         if kwargs.get('exchange') is not None: 
-            exchange = self.createExchange(self, kwargs.get('exchange'), kwargs)
+            exchange = self.createExchange(exchange=kwargs.get('exchange'), kwargs=kwargs)
             self.exchanges.append(exchange)
 
         if kwargs.get('queue') is not None:
-            queue = self.createQueue(self, kwargs.get('queue'), kwargs)
+            queue = self.createQueue(queue=kwargs.get('queue'), kwargs=kwargs)
             self.queues.append(queue)
 
         # Binding queue with exchange if needed
-        if kwargs.get('binding') == True and any in [exchange, queue] is not None:
-            self.channel.queue_bind(exchange=exchange, queue=queue, routing_key=kwargs.get('routing_key'))
+        if kwargs.get('binding') == True and any(item is not None for item in [exchange, queue]):
+            routing_key = kwargs.get('routing_key', '')
+            _LOGGER.debug(f"Binding with {routing_key}")
+            self.channel.queue_bind(exchange=exchange, queue=queue, routing_key=routing_key)
 
         return (exchange, queue)
 
     def createQueue(self, queue, **kwargs):
-        durable = True if kwargs.get('durable') is True else False
-        exclusive = True if kwargs.get('exclusive') is True else False
+        durable = kwargs.get('durable', True)
+        exclusive = kwargs.get('exclusive', False)
+        
         try:
             createdQueue = self.channel.queue_declare(queue=queue, durable=durable, exclusive=exclusive).method.queue
-        except Exception:
-            logger._LOGGER.error(f"Error when creating queue")
+            _LOGGER.debug(f"Queue created: {createdQueue}")
+        except Exception as e:
+            _LOGGER.error(f"Error when creating queue {e}")
             return None
         
         self.queues.append(queue)
         return createdQueue
 
     def createExchange(self, exchange, **kwargs):
-        exchange_type = None if kwargs.get('exchange_type') is None else kwargs.get('exchange_type')
-        durable = True if kwargs.get('durable') is True else False
+        exchange_type = kwargs.get('exchange_type', 'direct')
 
         try:
-            self.channel.exchange_declare(exchange=exchange, exchange_type=exchange_type, durable=durable)
-        except Exception:
-            logger._LOGGER.error("Error when creating exchange")
+            self.channel.exchange_declare(exchange=exchange, exchange_type=exchange_type)
+        except Exception as e:
+            _LOGGER.error(f"Error when creating exchange {e}")
             return None
 
         self.exchanges.append(exchange)
@@ -66,15 +76,18 @@ class rabbitMQConsumer(abstractConsumer):
         return body
     
     def closeConnection(self):
-        for exchange in self.exchanges:
-            self.channel.exchange_delete(exchange)
-            self.exchanges.pop(exchange)
+        #This is still a unsolved problem -------------------------------------------------------
 
+        # for exchange in self.exchanges:
+        #     self.channel.exchange_delete(exchange, if_unused=True)
+        # self.exchanges.clear()
+
+        #This is still a unsolved problem -------------------------------------------------------
+        
         for queue in self.queues:
             self.channel.queue_delete(queue)
-            self.queues.pop(queue)
-        
-        self.channel.close()
+
+        self.queues.clear()
         self.connection.close()
 
 
