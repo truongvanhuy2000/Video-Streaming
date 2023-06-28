@@ -48,7 +48,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
   
   cameraserver1:
     image: 127.0.0.1:3500/cameraserverapp
@@ -65,7 +65,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
     depends_on:
       - rabbitmq
     
@@ -84,7 +84,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
     depends_on:
       - rabbitmq
   
@@ -103,7 +103,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
     depends_on:
       - rabbitmq
   
@@ -121,7 +121,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
     depends_on:
       - rabbitmq
   
@@ -131,6 +131,11 @@ services:
     restart: unless-stopped
     networks:
       - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
   
   rabbitmq:
     image: rabbitmq:latest
@@ -138,6 +143,11 @@ services:
     restart: unless-stopped
     networks:
       - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
     
   # loadbalancer:
   #   image: 127.0.0.1:3500/loadbalancerapp
