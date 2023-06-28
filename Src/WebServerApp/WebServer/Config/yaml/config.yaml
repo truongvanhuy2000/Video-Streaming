@@ -3,8 +3,8 @@ website:
   port: 5000
 
 loadbalancer:
-  host: "videoserver"
-  port: 6000
+  host: "videoloadbalancer"
+  port: 1234
   transport:
     method: "HTTP"
     timeout: 5

@@ -4,11 +4,16 @@ build:
 	@sudo docker image build -t ${repository}/webserverapp 		Src/WebServerApp/
 	@sudo docker image build -t ${repository}/cameraserverapp 	Src/CameraServerApp/
 	@sudo docker image build -t ${repository}/aiserverapp 		Src/AiServerApp/ 
+	@sudo docker image build -t ${repository}/ailoadbalancer 		Src/VideoServerLoadBalancer/ 
+	@sudo docker image build -t ${repository}/videoloadbalancer 		Src/AiServerLoadBalancer/ 
+
 push:
 	@sudo docker push ${repository}/videoserverapp
 	@sudo docker push ${repository}/webserverapp
 	@sudo docker push ${repository}/cameraserverapp
 	@sudo docker push ${repository}/aiserverapp
+	@sudo docker push ${repository}/ailoadbalancer
+	@sudo docker push ${repository}/videoloadbalancer
 
 runwebserver:
 	@cd Src/WebServerApp && \

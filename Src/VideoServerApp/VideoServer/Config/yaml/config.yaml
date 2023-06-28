@@ -1,12 +1,12 @@
 # This is where our server will be hosted on
 httpserver:
   host: "0.0.0.0"
-  port: 6000
+  port: 9876
 
 # This is the address that will lead you to Ai Server
 loadbalancer:
-  host: "aiserver"
-  port: 7000
+  host: "ailoadbalancer"
+  port: 1234
   transport:
     method: "HTTP"
     timeout: 5

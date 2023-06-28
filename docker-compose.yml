@@ -1,7 +1,24 @@
 version: "3"
 
 services:
-  videoserver:
+  videoserver1:
+    image: 127.0.0.1:3500/videoserverapp
+    # build: Src/VideoServerApp/
+
+    container_name: videoserverapp
+    restart: unless-stopped
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+    depends_on:
+      - database
+      - rabbitmq
+
+  videoserver2:
     image: 127.0.0.1:3500/videoserverapp
     # build: Src/VideoServerApp/
 
@@ -36,11 +53,21 @@ services:
     depends_on:
       - database
 
-  aiserver:
+  aiserver1:
     image: 127.0.0.1:3500/aiserverapp
     # build: Src/AiServerApp/
-
-    container_name: aiserverapp
+    restart: unless-stopped
+    networks:
+      - cat
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+    
+  aiserver2:
+    image: 127.0.0.1:3500/aiserverapp
+    # build: Src/AiServerApp/
     restart: unless-stopped
     networks:
       - cat
@@ -69,73 +96,73 @@ services:
     depends_on:
       - rabbitmq
     
-  cameraserver2:
-    image: 127.0.0.1:3500/cameraserverapp
-    # build: Src/CameraServerApp/
+  # cameraserver2:
+  #   image: 127.0.0.1:3500/cameraserverapp
+  #   # build: Src/CameraServerApp/
 
-    container_name: cameraserverapp2
-    restart: unless-stopped
-    environment:
-      - RESOURCE=video2.mp4
-      - CAMERA_NAME=camera2
-    networks:
-      - cat
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-    depends_on:
-      - rabbitmq
+  #   container_name: cameraserverapp2
+  #   restart: unless-stopped
+  #   environment:
+  #     - RESOURCE=video2.mp4
+  #     - CAMERA_NAME=camera2
+  #   networks:
+  #     - cat
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == worker]
+  #   depends_on:
+  #     - rabbitmq
   
-  cameraserver3:
-    image: 127.0.0.1:3500/cameraserverapp
-    # build: Src/CameraServerApp/
+  # cameraserver3:
+  #   image: 127.0.0.1:3500/cameraserverapp
+  #   # build: Src/CameraServerApp/
 
-    container_name: cameraserverapp3
-    restart: unless-stopped
-    environment:
-      - RESOURCE=video3.mp4
-      - CAMERA_NAME=camera3
-    networks:
-      - cat
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-    depends_on:
-      - rabbitmq
+  #   container_name: cameraserverapp3
+  #   restart: unless-stopped
+  #   environment:
+  #     - RESOURCE=video3.mp4
+  #     - CAMERA_NAME=camera3
+  #   networks:
+  #     - cat
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == worker]
+  #   depends_on:
+  #     - rabbitmq
   
-  cameraserver4:
-    image: 127.0.0.1:3500/cameraserverapp
-    # build: Src/CameraServerApp/
-    container_name: cameraserverapp4
-    restart: unless-stopped
-    environment:
-      - RESOURCE=video4.mp4
-      - CAMERA_NAME=camera4
-    networks:
-      - cat
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-    depends_on:
-      - rabbitmq
+  # cameraserver4:
+  #   image: 127.0.0.1:3500/cameraserverapp
+  #   # build: Src/CameraServerApp/
+  #   container_name: cameraserverapp4
+  #   restart: unless-stopped
+  #   environment:
+  #     - RESOURCE=video4.mp4
+  #     - CAMERA_NAME=camera4
+  #   networks:
+  #     - cat
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == worker]
+  #   depends_on:
+  #     - rabbitmq
   
-  database:
-    image: redis:alpine
-    container_name: database
-    restart: unless-stopped
-    networks:
-      - cat
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == manager]
+  # database:
+  #   image: redis:alpine
+  #   container_name: database
+  #   restart: unless-stopped
+  #   networks:
+  #     - cat
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == manager]
   
   rabbitmq:
     image: rabbitmq:latest
@@ -149,16 +176,17 @@ services:
       placement:
         constraints: [node.role == manager]
     
-  # loadbalancer:
-  #   image: 127.0.0.1:3500/loadbalancerapp
-  #   restart: unless-stopped
-  #   networks:
-  #     - cat
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints: [node.role == manager]
+  ailoadbalancer:
+    image: 127.0.0.1:3500/ailoadbalancer
+    restart: unless-stopped
+    networks:
+      - cat
+
+  videoloadbalancer:
+    image: 127.0.0.1:3500/videoloadbalancer
+    restart: unless-stopped
+    networks:
+      - cat
 
 networks:
   cat:
