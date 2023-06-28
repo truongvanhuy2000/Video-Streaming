@@ -182,8 +182,8 @@ services:
     networks:
       - cat
     depends_on:
-      - videoserver1
-      - videoserver2
+      - aiserver1
+      - aiserver2
 
   videoloadbalancer:
     image: 127.0.0.1:3500/videoloadbalancer
@@ -191,8 +191,8 @@ services:
     networks:
       - cat
     depends_on:
-      - aiserver1
-      - aiserver2
+      - videoserver1
+      - videoserver2
 
 networks:
   cat:
