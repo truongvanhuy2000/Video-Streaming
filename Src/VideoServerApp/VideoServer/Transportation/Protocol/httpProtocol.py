@@ -17,6 +17,7 @@ class httpProtocol(abstractProtocol):
         method = 'POST'
         url = ''
 
+        _LOGGER.debug(f"Send request to server")
         self.client.request(method=method, headers=headers, url=url, body=payload)
         try:
             response = self.client.getresponse()

@@ -181,12 +181,18 @@ services:
     restart: unless-stopped
     networks:
       - cat
+    depends_on:
+      - videoserver1
+      - videoserver2
 
   videoloadbalancer:
     image: 127.0.0.1:3500/videoloadbalancer
     restart: unless-stopped
     networks:
       - cat
+    depends_on:
+      - aiserver1
+      - aiserver2
 
 networks:
   cat:
