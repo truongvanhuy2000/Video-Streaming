@@ -2,8 +2,8 @@ version: "3"
 
 services:
   videoserver:
-    # image: 127.0.0.1:3500/videoserverapp
-    build: Src/VideoServerApp/
+    image: 127.0.0.1:3500/videoserverapp
+    # build: Src/VideoServerApp/
 
     container_name: videoserverapp
     restart: unless-stopped
@@ -19,8 +19,8 @@ services:
       - rabbitmq
 
   webserver:
-    # image: 127.0.0.1:3500/webserverapp
-    build: Src/WebServerApp/
+    image: 127.0.0.1:3500/webserverapp
+    # build: Src/WebServerApp/
 
     container_name: webserverapp
     ports:
@@ -37,8 +37,8 @@ services:
       - database
 
   aiserver:
-    # image: 127.0.0.1:3500/aiserverapp
-    build: Src/AiServerApp/
+    image: 127.0.0.1:3500/aiserverapp
+    # build: Src/AiServerApp/
 
     container_name: aiserverapp
     restart: unless-stopped
@@ -51,8 +51,8 @@ services:
         constraints: [node.role == manager]
   
   cameraserver1:
-    # image: 127.0.0.1:3500/cameraserverapp
-    build: Src/CameraServerApp/
+    image: 127.0.0.1:3500/cameraserverapp
+    # build: Src/CameraServerApp/
 
     container_name: cameraserverapp1
     restart: unless-stopped
@@ -70,8 +70,8 @@ services:
       - rabbitmq
     
   cameraserver2:
-    # image: 127.0.0.1:3500/cameraserverapp
-    build: Src/CameraServerApp/
+    image: 127.0.0.1:3500/cameraserverapp
+    # build: Src/CameraServerApp/
 
     container_name: cameraserverapp2
     restart: unless-stopped
@@ -89,8 +89,8 @@ services:
       - rabbitmq
   
   cameraserver3:
-    # image: 127.0.0.1:3500/cameraserverapp
-    build: Src/CameraServerApp/
+    image: 127.0.0.1:3500/cameraserverapp
+    # build: Src/CameraServerApp/
 
     container_name: cameraserverapp3
     restart: unless-stopped
@@ -108,8 +108,8 @@ services:
       - rabbitmq
   
   cameraserver4:
-    # image: 127.0.0.1:3500/cameraserverapp
-    build: Src/CameraServerApp/
+    image: 127.0.0.1:3500/cameraserverapp
+    # build: Src/CameraServerApp/
     container_name: cameraserverapp4
     restart: unless-stopped
     environment:

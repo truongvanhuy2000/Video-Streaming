@@ -1,11 +1,14 @@
 repository = 127.0.0.1:3500
 build:
 	@sudo docker image build -t ${repository}/videoserverapp 	Src/VideoServerApp/
-	@sudo docker image build -t ${repository}/webserverapp 		Src/WebServerApp/ 
+	@sudo docker image build -t ${repository}/webserverapp 		Src/WebServerApp/
+	@sudo docker image build -t ${repository}/cameraserverapp 	Src/CameraServerApp/
+	@sudo docker image build -t ${repository}/aiserverapp 		Src/AiServerApp/ 
 push:
 	@sudo docker push ${repository}/videoserverapp
 	@sudo docker push ${repository}/webserverapp
-	@sudo docker push ${repository}/loadbalancerapp
+	@sudo docker push ${repository}/cameraserverapp
+	@sudo docker push ${repository}/aiserverapp
 
 runwebserver:
 	@cd Src/WebServerApp && \
