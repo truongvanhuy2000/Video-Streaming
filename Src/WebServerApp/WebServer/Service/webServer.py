@@ -52,7 +52,8 @@ def index():
             view = config.get('view', 1)
 
     return render_template('index.html', model=aiModel, 
-                           views=int(view), video_feeds=video_feeds, status = status)
+                           views=int(view), video_feeds=video_feeds, 
+                           status = status)
 
 @app.route('/status', methods=['POST', ])
 def status():
@@ -96,6 +97,7 @@ def handleVideoFeed(model, video):
         'model': model,
         'camera' : video
         }
+    _LOGGER.info(f"Incoming Connection")
     videoRequest = json.dumps(videoRequest)
     return Response(connectionToVideoService(request=videoRequest),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
