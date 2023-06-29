@@ -15,10 +15,10 @@
 </div>
 <div class="container">
   <div class="choosingModelForm">
-
     <form action="/" method="post">
       <label for="Model">Choose a model:</label>
       <select name="Model" id="Model">
+        <option value="None" {% if model == "None"%} selected {% endif %}>None</option>
         <option value="haarcascade_frontalface" {% if model == "haarcascade_frontalface"%} selected {% endif %}>haarcascade_frontalface</option>
         <option value="mobilenetssd" {% if model == "mobilenetssd"%} selected {% endif %}>mobilenetssd</option>
         <option value="YOLOv3" {% if model == "YOLOv3"%} selected {% endif %}>YOLOv3</option>

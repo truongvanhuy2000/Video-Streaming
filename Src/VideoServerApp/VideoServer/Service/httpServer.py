@@ -102,7 +102,8 @@ def handleRequest():
         'model' : model,
         'frame' : helper.encodeToString(videoData)
     }
-    frame = requestFaceDetection(json.dumps(tempDict), videoData)
+    if model != "None":
+        frame = requestFaceDetection(json.dumps(tempDict), videoData)
 
     return Response(response=frame, status=200)
 
