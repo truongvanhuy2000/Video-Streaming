@@ -103,9 +103,9 @@ def handleRequest():
         'frame' : helper.encodeToString(videoData)
     }
     if model != "None":
-        frame = requestFaceDetection(json.dumps(tempDict), videoData)
+        videoData = requestFaceDetection(json.dumps(tempDict), videoData)
 
-    return Response(response=frame, status=200)
+    return Response(response=videoData, status=200)
 
 def serve():
     _LOGGER.info(f"Http Server is running at: {HTTPSERVER_HOST}:{HTTPSERVER_PORT}")
