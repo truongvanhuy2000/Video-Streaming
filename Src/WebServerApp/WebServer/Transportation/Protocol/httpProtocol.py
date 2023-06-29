@@ -33,6 +33,7 @@ class httpProtocol(abstractProtocol):
             
             content = response.read()
             return content
+        
         except client.HTTPException:
             _LOGGER.error("Probably a timeout")
         finally:

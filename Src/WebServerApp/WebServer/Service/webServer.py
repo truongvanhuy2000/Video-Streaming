@@ -27,10 +27,10 @@ status = None
 @app.route('/', methods=['POST', 'GET'])
 def index():
     video_feeds = [
-        'video_feed_one',
-        'video_feed_two',
-        'video_feed_three',
-        'video_feed_four'
+        'camera1',
+        'camera2',
+        'camera3',
+        'camera4'
     ]
     if request.method == 'POST':
         aiModel = request.form['Model']
@@ -62,21 +62,9 @@ def status():
     status = "start" if action == "start" else "stop"
     return redirect(url_for('index'))
 
-@app.route('/<variable>/video_feed_one')
-def video_feed_one(variable):
-    return handleVideoFeed(model=variable, video="camera1")
-
-@app.route('/<variable>/video_feed_two')
-def video_feed_two(variable):
-    return handleVideoFeed(model=variable, video="camera2")
-
-@app.route('/<variable>/video_feed_three')
-def video_feed_three(variable):
-    return handleVideoFeed(model=variable, video="camera3")
-
-@app.route('/<variable>/video_feed_four')
-def video_feed_four(variable):
-    return handleVideoFeed(model=variable, video="camera4")
+@app.route('/camera_feed/<camera>/<model>')
+def camera_feed(model, camera):
+    return handleVideoFeed(model=model, camera=camera)
 
 def connectionToVideoService(request):
     try:
@@ -92,10 +80,10 @@ def connectionToVideoService(request):
         transportMethod.close()
         return Response(status=500)
 
-def handleVideoFeed(model, video):
+def handleVideoFeed(model, camera):
     videoRequest = {
         'model': model,
-        'camera' : video
+        'camera' : camera
         }
     _LOGGER.info(f"Incoming Connection")
     videoRequest = json.dumps(videoRequest)
