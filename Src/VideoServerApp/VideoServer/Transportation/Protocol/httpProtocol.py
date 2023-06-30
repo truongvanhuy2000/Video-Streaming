@@ -9,13 +9,13 @@ class httpProtocol(abstractProtocol):
     def __init__(self, host:str, port) -> None:
         self.client = client.HTTPConnection(host, port, timeout=5)
 
-    def request(self, data):
+    def request(self, route, data):
         headers = {
             'Content-Type': 'application/json'
         }
         payload = data
         method = 'POST'
-        url = ''
+        url = route
 
         _LOGGER.debug(f"Send request to server")
         self.client.request(method=method, headers=headers, url=url, body=payload)

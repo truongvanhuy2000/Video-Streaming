@@ -5,7 +5,6 @@ services:
     image: 127.0.0.1:3500/videoserverapp
     # build: Src/VideoServerApp/
 
-    container_name: videoserverapp
     restart: unless-stopped
     networks:
       - cat
@@ -22,7 +21,6 @@ services:
     image: 127.0.0.1:3500/videoserverapp
     # build: Src/VideoServerApp/
 
-    container_name: videoserverapp
     restart: unless-stopped
     networks:
       - cat
@@ -39,7 +37,6 @@ services:
     image: 127.0.0.1:3500/webserverapp
     # build: Src/WebServerApp/
 
-    container_name: webserverapp
     ports:
       - "5000:5000"
     restart: unless-stopped
@@ -81,7 +78,6 @@ services:
     image: 127.0.0.1:3500/cameraserverapp
     # build: Src/CameraServerApp/
 
-    container_name: cameraserverapp1
     restart: unless-stopped
     environment:
       - RESOURCE=video1.mp4
@@ -100,7 +96,6 @@ services:
     image: 127.0.0.1:3500/cameraserverapp
     # build: Src/CameraServerApp/
 
-    container_name: cameraserverapp2
     restart: unless-stopped
     environment:
       - RESOURCE=video2.mp4
@@ -119,7 +114,6 @@ services:
     image: 127.0.0.1:3500/cameraserverapp
     # build: Src/CameraServerApp/
 
-    container_name: cameraserverapp3
     restart: unless-stopped
     environment:
       - RESOURCE=video3.mp4
@@ -137,7 +131,6 @@ services:
   cameraserver4:
     image: 127.0.0.1:3500/cameraserverapp
     # build: Src/CameraServerApp/
-    container_name: cameraserverapp4
     restart: unless-stopped
     environment:
       - RESOURCE=video4.mp4
@@ -181,18 +174,18 @@ services:
     restart: unless-stopped
     networks:
       - cat
-    depends_on:
-      - aiserver1
-      - aiserver2
+    # depends_on:
+    #   - aiserver1
+    #   - aiserver2
 
   videoloadbalancer:
     image: 127.0.0.1:3500/videoloadbalancer
     restart: unless-stopped
     networks:
       - cat
-    depends_on:
-      - videoserver1
-      - videoserver2
+    # depends_on:
+    #   - videoserver1
+    #   - videoserver2
 
 networks:
   cat:

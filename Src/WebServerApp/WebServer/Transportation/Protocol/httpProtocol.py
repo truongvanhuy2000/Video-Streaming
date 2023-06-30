@@ -11,7 +11,7 @@ class httpProtocol(abstractProtocol):
         
         self.client = client.HTTPConnection(host, port, timeout=5)
 
-    def request(self, data:str):
+    def request(self, route, data:str):
         if not isinstance(data, str):
             raise TypeError(f"Must provide a bool, not a {type(data)}")
         
@@ -20,7 +20,7 @@ class httpProtocol(abstractProtocol):
         }
         payload = data
         method = 'POST'
-        url = ''
+        url = route
 
         self.client.request(method=method, headers=headers, url=url, body=payload)
         try:
@@ -28,7 +28,7 @@ class httpProtocol(abstractProtocol):
             if response.status == 200:
                 _LOGGER.debug("Request successfully")
             else:
-                _LOGGER.error("Request error")
+                _LOGGER.error(f"Request error: {response.status}")
                 return None
             
             content = response.read()

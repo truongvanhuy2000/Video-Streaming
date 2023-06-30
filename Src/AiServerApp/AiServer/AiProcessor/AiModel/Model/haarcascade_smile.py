@@ -3,9 +3,9 @@ from AiServer.common.logger import _LOGGER
 
 import cv2
 
-class haarcascade(model):
+class haarcascade_smile(model):
     def __init__(self) -> None:
-        haar_file = 'AiServer/AiProcessor/AiModel/Model/resources/haarcascade_frontalface_default.xml'
+        haar_file = 'AiServer/AiProcessor/AiModel/Model/resources/haarcascade_smile.xml'
         self.face_cascade = cv2.CascadeClassifier(haar_file)
 
     def detect(self, frame) -> list:

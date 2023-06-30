@@ -26,12 +26,9 @@ status = None
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    video_feeds = [
-        'camera1',
-        'camera2',
-        'camera3',
-        'camera4'
-    ]
+    video_feeds = requestCameraList()
+    ai_models = requestAiModelList()
+    
     if request.method == 'POST':
         aiModel = request.form['Model']
         view = int(request.form['View'])
@@ -53,7 +50,35 @@ def index():
 
     return render_template('index.html', model=aiModel, 
                            views=int(view), video_feeds=video_feeds, 
-                           status = status)
+                           ai_models=ai_models, status=status)
+
+def requestCameraList() -> list:
+    transportMethod = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
+                                                                host=LOADBALANCER_HOST,
+                                                                port=LOADBALANCER_PORT)
+    
+    response = transportMethod.request("/camera_list_request", data="")
+    transportMethod.close()
+    try:
+        cameraList = json.loads(response)
+    except Exception as e:
+        _LOGGER.error(f"{e}")
+        return []
+    return cameraList.get('camera')
+
+def requestAiModelList() -> list:
+    transportMethod = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
+                                                                host=LOADBALANCER_HOST,
+                                                                port=LOADBALANCER_PORT)
+    
+    response = transportMethod.request("/ai_model_list", data="")
+    transportMethod.close()
+    try:
+        aiModelList = json.loads(response)
+    except Exception as e:
+        _LOGGER.error(f"{e}")
+        return []
+    return aiModelList.get('models')
 
 @app.route('/status', methods=['POST', ])
 def status():
@@ -64,23 +89,6 @@ def status():
 
 @app.route('/camera_feed/<camera>/<model>')
 def camera_feed(model, camera):
-    return handleVideoFeed(model=model, camera=camera)
-
-def connectionToVideoService(request):
-    try:
-        transportMethod = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
-                                                                host=LOADBALANCER_HOST,
-                                                                port=LOADBALANCER_PORT)
-        while True: 
-            response = transportMethod.request(data=request)
-            yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + response + b'\r\n')
-
-    except GeneratorExit as e:
-        _LOGGER.warning(f"Close the connection")
-        transportMethod.close()
-        return Response(status=500)
-
-def handleVideoFeed(model, camera):
     videoRequest = {
         'model': model,
         'camera' : camera
@@ -89,4 +97,20 @@ def handleVideoFeed(model, camera):
     videoRequest = json.dumps(videoRequest)
     return Response(connectionToVideoService(request=videoRequest),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+def connectionToVideoService(request):
+    try:
+        transportMethod = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
+                                                                host=LOADBALANCER_HOST,
+                                                                port=LOADBALANCER_PORT)
+        while True: 
+            response = transportMethod.request(route='/video_request', data=request)
+            yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + response + b'\r\n')
+
+    except GeneratorExit as e:
+        _LOGGER.warning(f"Close the connection")
+        transportMethod.close()
+        return Response(status=500)
+
+    
     

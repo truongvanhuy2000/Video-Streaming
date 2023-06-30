@@ -8,6 +8,9 @@ class abstractDatabase(ABC):
     def setData(self, key, value):
         pass
     @abstractmethod
+    def getAll(self, filter=None):
+        pass
+    @abstractmethod
     def isExist(self, key) -> bool:
         pass
     

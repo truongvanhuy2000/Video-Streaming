@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class abstractProtocol(ABC):
     @abstractmethod
-    def request(self, data):
+    def request(self, route, data):
         pass
 
     @abstractmethod

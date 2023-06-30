@@ -25,3 +25,13 @@ class Redis(abstractDatabase):
         if self.isExist(key):
             _LOGGER.warning("This key is already exist, update the value")
         self.redisInstance.set(key, value) != "OK"
+
+    def getAll(self, filter=None):
+        match = '*'
+        returnList = []
+        if filter != None:
+            match = f"{filter}*"
+        for key in self.redisInstance.scan_iter(match):
+            returnList.append(key.decode())
+            
+        return returnList

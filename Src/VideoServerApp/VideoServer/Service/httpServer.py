@@ -34,6 +34,34 @@ database = databaseProvider.getDatabase(type=DATABASE_TYPE,
                                         port=DATABASE_PORT, 
                                         db=0)
 
+@app.route('/video_request', methods=['POST', 'GET'])
+def handleVideoRequest():
+    data = request.get_json()
+    if data is None:
+        return Response(response='Missing request', status=500)
+    
+    camera = data.get('camera', None)
+    model = data.get('model', None)
+    if any(item is None for item in [camera, model]):
+        return Response(response='Missing request', status=500)
+
+    # Critical section-----------------------------------------------------------
+    rLock.acquire()
+    metadata = database.getData(camera)
+    rLock.release()
+    #Critical section------------------------------------------------------------
+
+    videoData = getVideo(host=RABBITMQ_HOST, metadata=metadata)
+
+    tempDict = {
+        'model' : model,
+        'frame' : helper.encodeToString(videoData)
+    }
+    if model != "None":
+        videoData = requestFaceDetection(json.dumps(tempDict), videoData)
+
+    return Response(response=videoData, status=200)
+
 def getVideo(host, metadata):
     metadata = json.loads(metadata)
     topic = metadata.get('topic')
@@ -67,45 +95,41 @@ def requestFaceDetection(requestData, frame):
     client = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
                                                   host=LOADBALANCER_HOST,
                                                   port=LOADBALANCER_PORT)
-    response = client.request(requestData)
+    response = client.request(route='', data=requestData)
+    client.close()
     if response is None:
         return frame
     
-    faces = response.get('faces')
+    faces = response.get('detections')
     detectedFrame = videoProcessor().drawBoundingBox(helper.deserializeTheImage(frame), faces)
     # Look up database for face recognition-----------------------------------------
     #LookUpDatabaseForFaceRecognition()
     #-------------------------------------------------------------------------------
     return helper.serializeTheImage(detectedFrame)
 
-
-@app.route('/', methods=['POST', 'GET'])
-def handleRequest():
-    data = request.get_json()
-    if data is None:
-        return Response(response='Missing request', status=500)
+@app.route('/camera_list_request', methods=['POST', 'GET'])
+def handleCameraListRequest():
+    cameraList = database.getAll()
+    _LOGGER.info(cameraList)
+    try:
+        responseList = json.dumps({'camera' : cameraList})
+    except Exception as e:
+        _LOGGER.error(f"{e}")
+        return Response(status=500)
     
-    camera = data.get('camera', None)
-    model = data.get('model', None)
-    if any(item is None for item in [camera, model]):
-        return Response(response='Missing request', status=500)
+    return Response(response=responseList, status=200)
 
-    # Critical section-----------------------------------------------------------
-    rLock.acquire()
-    metadata = database.getData(camera)
-    rLock.release()
-    #Critical section------------------------------------------------------------
-
-    videoData = getVideo(host=RABBITMQ_HOST, metadata=metadata)
-
-    tempDict = {
-        'model' : model,
-        'frame' : helper.encodeToString(videoData)
-    }
-    if model != "None":
-        videoData = requestFaceDetection(json.dumps(tempDict), videoData)
-
-    return Response(response=videoData, status=200)
+@app.route('/ai_model_list', methods=['POST', 'GET'])
+def handleAiListRequest():
+    client = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
+                                                  host=LOADBALANCER_HOST,
+                                                  port=LOADBALANCER_PORT)
+    response = client.request(route='/ai_model_list', data='')
+    client.close()
+    if response is None:
+        return Response(response="Can't send request to AI server", status=500)
+    
+    return Response(response=json.dumps(response), status=200)
 
 def serve():
     _LOGGER.info(f"Http Server is running at: {HTTPSERVER_HOST}:{HTTPSERVER_PORT}")

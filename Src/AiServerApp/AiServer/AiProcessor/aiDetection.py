@@ -4,7 +4,7 @@ from AiServer.common import helper
 
 import json
 
-class faceDetection():
+class aiDetection():
     def __init__(self, model) -> None:
         self.detectionModel = modelProvider.getModel(model)
         if self.detectionModel == None:
@@ -17,7 +17,7 @@ class faceDetection():
             return None
         
         detections = {
-            'faces' : detections
+            'detections' : detections
         }
         try:
             detections = json.dumps(detections)
