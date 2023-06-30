@@ -89,11 +89,11 @@ def status():
 
 @app.route('/camera_feed/<camera>/<model>')
 def camera_feed(model, camera):
+    _LOGGER.info(f"Request {camera} using model {model}")
     videoRequest = {
         'model': model,
         'camera' : camera
         }
-    _LOGGER.info(f"Incoming Connection")
     videoRequest = json.dumps(videoRequest)
     return Response(connectionToVideoService(request=videoRequest),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
