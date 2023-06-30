@@ -21,35 +21,35 @@ database = databaseProvider.getDatabase(type=DATABASE_TYPE,
                                         host=DATABASE_HOST, 
                                         port=DATABASE_PORT, 
                                         db=1)
-
 status = None
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    video_feeds = requestCameraList()
+    video_feeds = sorted(requestCameraList(), key=lambda x: int(x[-1]))
     ai_models = requestAiModelList()
     
     if request.method == 'POST':
         aiModel = request.form['Model']
-        view = int(request.form['View'])
+        camera = request.form['Camera']
         data = {
             'model': aiModel,
-            'view': view
+            'camera': camera
         }
         database.setData('viewConfig', json.dumps(data))
+
     else:
         config = database.getData('viewConfig')
 
         if config is None:
-            aiModel = 'haarcascade_frontalface'
-            view = 1
+            aiModel = 'None'
+            camera = 'camera1'
         else:
             config = json.loads(config)
-            aiModel = config.get('model', 'haarcascade_frontalface')
-            view = config.get('view', 1)
+            aiModel = config.get('model', 'None')
+            camera = config.get('camera', 'camera1')
 
     return render_template('index.html', model=aiModel, 
-                           views=int(view), video_feeds=video_feeds, 
+                           camera=camera, video_feeds=video_feeds, 
                            ai_models=ai_models, status=status)
 
 def requestCameraList() -> list:

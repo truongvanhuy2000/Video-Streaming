@@ -5,14 +5,10 @@
 {% block body %}
 <div id="main">
   {% if status == "start" %}
-    {% for index in range(views)%} 
     <div class="category-{{index}}">
-        <h1>Video Streaming {{index}} {{model}}</h1>
-      {% if index <= video_feeds|length - 1 %}
-        <img src="{{ url_for('camera_feed', model=model, camera=video_feeds[index]) }}" width="640" height="320">
-      {% endif %}
+        <h1>Video Streaming {{camera}} {{model}}</h1>
+        <img src="{{ url_for('camera_feed', model=model, camera=camera) }}" width="640" height="320">
     </div>
-    {% endfor %}
   {% endif %}
 </div>
 
@@ -28,13 +24,11 @@
 
       </select>
       <br><br>
-      <label for="View">Number of views:</label>
-      <select name="View" id="View">
-        
-        <option value=1 {% if views == 1%} selected {% endif %}>1</option>
-        <option value=2 {% if views == 2%} selected {% endif %}>2</option>
-        <option value=3 {% if views == 3%} selected {% endif %}>3</option>
-        <option value=4 {% if views == 4%} selected {% endif %}>4</option>
+      <label for="Camera">Choose a Camera:</label>
+      <select name="Camera" id="Camera">
+        {% for video_feed in video_feeds%}
+        <option value={{video_feed}} {% if camera == video_feed%} selected {% endif %}>{{video_feed}}</option>
+        {% endfor %}
       </select>
       <input type="submit" value="Submit">
     </form>
