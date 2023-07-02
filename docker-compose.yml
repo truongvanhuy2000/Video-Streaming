@@ -158,7 +158,7 @@ services:
         constraints: [node.role == manager]
   
   rabbitmq:
-    image: rabbitmq:latest
+    image: rabbitmq:alpine
     container_name: rabbitmq
     restart: unless-stopped
     networks:

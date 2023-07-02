@@ -1,4 +1,0 @@
-rabbitmq:
-  host: "rabbitmq"
-logging:
-  level: "INFO"

@@ -44,7 +44,10 @@ def index():
             aiModel = 'None'
             camera = 'camera1'
         else:
-            config = json.loads(config)
+            try:
+                config = json.loads(config)
+            except Exception as e:
+                _LOGGER.error(f"{e}")
             aiModel = config.get('model', 'None')
             camera = config.get('camera', 'camera1')
 
@@ -98,7 +101,7 @@ def camera_feed(model, camera):
     return Response(connectionToVideoService(request=videoRequest),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-def connectionToVideoService(request):
+def connectionToVideoService(request:str):
     try:
         transportMethod = transportProvider.getTransportMethod(method=LOADBALANCER_TRANSPORT_METHOD, 
                                                                 host=LOADBALANCER_HOST,
