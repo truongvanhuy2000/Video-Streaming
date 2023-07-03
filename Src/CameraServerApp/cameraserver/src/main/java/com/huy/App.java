@@ -1,40 +1,45 @@
 package com.huy;
 
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.video.Video;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opencv.videoio.VideoCapture;
+import org.opencv.videoio.Videoio;
+import org.opencv.core.Mat;
 
+import java.awt.image.*;
+import java.util.Objects;
+import javax.swing.*;
+
+//import static com.huy.Shared.logger.LOGGER;
 /**
  * Hello world!
  *
  */
 public class App 
 {
-    public void displayVideo()
-    {
-        String videoPath = "/home/huy/Videos/video1.mp4";
-//        try {
-//            videoPath =
-//            videoPath = getClass().getResource("/Video/video1.mp4").getPath();
-//            System.out.println(videoPath);
-//        }
-//        catch(Exception e){
-//            System.out.println("Exception type: " + e.getClass().getName());
-//        }
-//        if (videoPath.equals("")) {
-//            System.out.println("Can't find video path");
-//            return;
-//        }
-        VideoCapture camera = new VideoCapture(videoPath);
-        if (!camera.isOpened())
-        {
-            System.out.println("Open video failed");
+    public static final Logger LOGGER = LogManager.getLogger(App.class);
+
+    public void displayVideo() {
+        String videoPath = "";
+        try {
+            videoPath = Objects.requireNonNull(getClass().getResource("/Video/video1.mp4")).getPath();
         }
+        catch(Exception e){
+            System.out.println("Exception type: " + e.getClass().getName());
+        }
+        if (videoPath.equals("")) {
+            System.out.println("Can't find video path");
+            return;
+        }
+        VideoCapture camera = new VideoCapture(videoPath, Videoio.CAP_FFMPEG);
+        if (!camera.isOpened()) {
+            LOGGER.error("Open video failed");
+        }
+        LOGGER.info("Open video success");
     }
-    public static void main( String[] args )
+    public static void main(String[] args)
     {
-        System.load("/home/huy/githubRepo/opencv-4.8.0/build/lib/libopencv_java480.so");
+        System.load("/home/huy/opencv-4.8.0/build/lib/libopencv_java480.so");
         System.out.println( "Hello World!" );
         App app = new App();
         app.displayVideo();
