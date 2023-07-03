@@ -10,7 +10,7 @@ import java.awt.image.*;
 import java.util.Objects;
 import javax.swing.*;
 
-//import static com.huy.Shared.logger.LOGGER;
+import com.huy.Shared.helper;
 /**
  * Hello world!
  *
@@ -20,17 +20,7 @@ public class App
     public static final Logger LOGGER = LogManager.getLogger(App.class);
 
     public void displayVideo() {
-        String videoPath = "";
-        try {
-            videoPath = Objects.requireNonNull(getClass().getResource("/Video/video1.mp4")).getPath();
-        }
-        catch(Exception e){
-            System.out.println("Exception type: " + e.getClass().getName());
-        }
-        if (videoPath.equals("")) {
-            System.out.println("Can't find video path");
-            return;
-        }
+        String videoPath = helper.getResources("/Video/video1.mp4");
         VideoCapture camera = new VideoCapture(videoPath, Videoio.CAP_FFMPEG);
         if (!camera.isOpened()) {
             LOGGER.error("Open video failed");
@@ -39,7 +29,7 @@ public class App
     }
     public static void main(String[] args)
     {
-        System.load("/home/huy/opencv-4.8.0/build/lib/libopencv_java480.so");
+        System.loadLibrary("libopencv_java480.so");
         System.out.println( "Hello World!" );
         App app = new App();
         app.displayVideo();
