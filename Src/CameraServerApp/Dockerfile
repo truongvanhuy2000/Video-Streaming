@@ -1,7 +1,12 @@
-FROM python:3.10-slim as build_stage
-COPY requirements.txt /app/requirements.txt
+FROM openjdk:11
+
+RUN apt update &&\
+    apt install -y pkg-config &&\
+    apt install -y ffmpeg libavformat-dev libavcodec-dev libswscale-dev 
+
 WORKDIR /app
-RUN pip install --no-cache-dir -r  requirements.txt
 COPY . /app
 
-CMD ["python3", "-m", "CameraServer"]
+WORKDIR /app/cameraserver
+
+CMD ["java", "-jar", "./out/artifacts/cameraserver_jar/cameraserver.jar"]

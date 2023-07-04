@@ -3,23 +3,20 @@ package com.huy;
 import com.huy.Config.configHandler;
 import com.huy.VideoPublisher.MessageQueue.messageQueue;
 import com.huy.VideoReader.cv2Reader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.opencv.core.Mat;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Map;
 
 import com.huy.Shared.helper;
+import static com.huy.Shared.helper.LOGGER;
 import static com.huy.Config.configHandler.CONFIG;
 import static com.huy.VideoPublisher.MQProvider.MessagingConfiguration;
 
 public class App 
 {
-    public static final Logger LOGGER = LogManager.getLogger(App.class);
     private static final String RABBITMQ_HOST = CONFIG.getRabbitmq().get("host");
     private static final String CAMERA_NAME = "camera1";
     private static final String VIDEO_TOPIC = "video_exchange";

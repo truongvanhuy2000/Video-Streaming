@@ -13,8 +13,9 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.huy.Shared.helper.LOGGER;
+
 public class cv2Reader {
-    public static final Logger LOGGER = LogManager.getLogger(cv2Reader.class);
     private final VideoCapture cap;
     public cv2Reader(String filename){
         cap = new VideoCapture(filename, Videoio.CAP_FFMPEG);

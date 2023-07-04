@@ -1,22 +1,17 @@
 package com.huy.VideoPublisher.MessageQueue;
-import com.huy.App;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.MessageProperties;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import static com.huy.Shared.helper.LOGGER;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public final class rabbitMQClient implements messageQueue{
-    public static final Logger LOGGER = LogManager.getLogger(rabbitMQClient.class);
     private Channel channel;
     private Connection connection;
     private final List<String> exchangesList = new ArrayList<>();

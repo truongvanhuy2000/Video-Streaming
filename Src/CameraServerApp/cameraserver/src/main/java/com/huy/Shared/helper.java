@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class helper {
-    public static final Logger LOGGER = LogManager.getLogger(App.class);
+    public static final Logger LOGGER = LogManager.getLogger(helper.class);
     static public byte[] serializeTheImage(Mat frame){
         MatOfByte matByte = new MatOfByte();
         Imgcodecs.imencode(".jpg", frame, matByte);

@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 
 
 public class configHandler {
-    public static final Logger LOGGER = LogManager.getLogger(App.class);
     public static final InputStream config = helper.getResources("/Config/yaml/config.yaml");
     public static config CONFIG = new config();
     public static void loadConfig() throws IOException {
