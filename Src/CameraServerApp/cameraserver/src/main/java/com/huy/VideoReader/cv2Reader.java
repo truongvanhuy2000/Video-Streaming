@@ -11,6 +11,7 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class cv2Reader {
     public static final Logger LOGGER = LogManager.getLogger(cv2Reader.class);
@@ -35,8 +36,8 @@ public class cv2Reader {
         return resizedFrame;
     }
 
-    public HashMap<String, String> getCaptureInformation(String... args){
-        HashMap<String, String> metadata = new HashMap<>();
+    public Map<String, String> getCaptureInformation(String... args){
+        Map<String, String> metadata = new HashMap<>();
         String info = "";
         for (String arg : args){
             switch (arg){

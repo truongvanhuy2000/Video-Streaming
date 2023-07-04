@@ -46,6 +46,7 @@ public final class rabbitMQClient implements messageQueue{
             return null;
         }
         String exchange = route[0];
+
         try {
             channel.exchangeDeclare(exchange, "direct", true);
         } catch (IOException e) {
@@ -75,17 +76,17 @@ public final class rabbitMQClient implements messageQueue{
     }
 
     @Override
-    public boolean publishVideo(String topic, String data)
+    public boolean publishVideo(String topic, byte[] data)
     {
         return publish(topic, data);
     }
     @Override
-    public boolean publishMetadata(String topic, String data)
+    public boolean publishMetadata(String topic, byte[] data)
     {
         return publish(topic, data);
     }
 
-    private boolean publish(String topic, String data){
+    private boolean publish(String topic, byte[] data){
 
         String[] route = topic.split("/", 0);
         if (route.length < 2){
@@ -97,7 +98,7 @@ public final class rabbitMQClient implements messageQueue{
         String routing_key = route[1];
 
         try {
-            channel.basicPublish(exchange, routing_key, MessageProperties.PERSISTENT_TEXT_PLAIN, data.getBytes("UTF-8"));
+            channel.basicPublish(exchange, routing_key, MessageProperties.PERSISTENT_BASIC, data);
         } catch (IOException e) {
             LOGGER.error("Can't publish metadata");
             return false;
