@@ -3,22 +3,28 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.MessageProperties;
-import static com.huy.Shared.helper.LOGGER;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public final class rabbitMQClient implements messageQueue{
+    private static final Logger LOGGER = LogManager.getLogger(rabbitMQClient.class);
     private Channel channel;
     private Connection connection;
     private final List<String> exchangesList = new ArrayList<>();
     private final List<String> queuesList = new ArrayList<>();
      public rabbitMQClient(String host) throws InterruptedException {
+         if (host == null){
+             throw new IllegalArgumentException("Host can't be null");
+         }
          ConnectionFactory factory = new ConnectionFactory();
          factory.setHost(host);
+         LOGGER.info(host);
          while(true){
              try{
                  connection = factory.newConnection();
@@ -26,6 +32,7 @@ public final class rabbitMQClient implements messageQueue{
              }
              catch(Exception e){
                  TimeUnit.SECONDS.sleep(1);
+                 LOGGER.error("Can't connect to Rabbit MQ server");
                  continue;
              }
              break;
@@ -37,16 +44,15 @@ public final class rabbitMQClient implements messageQueue{
     public String createVideoTopic(String topic) {
         String[] route = topic.split("/", 0);
         if (route.length < 1){
-            LOGGER.error("Wrong topic format");
-            return null;
+            throw new IllegalArgumentException("Wrong route format");
         }
         String exchange = route[0];
 
         try {
-            channel.exchangeDeclare(exchange, "direct", true);
+            channel.exchangeDeclare(exchange, "direct", false);
         } catch (IOException e) {
             LOGGER.error("Can't create video topic");
-            return null;
+            System.exit(0);
         }
         exchangesList.add(exchange);
         return exchange;
@@ -56,18 +62,18 @@ public final class rabbitMQClient implements messageQueue{
     public String createMetadataTopic(String topic) {
         String[] route = topic.split("/", 0);
         if (route.length < 1){
-            LOGGER.error("Wrong topic format");
-            return null;
+            throw new IllegalArgumentException("Wrong route format");
         }
         String queue = route[0];
+        String queueName = "";
         try {
-            queue = channel.queueDeclare(queue, true, false, false, null).getQueue();
+            queueName = channel.queueDeclare(queue, true, false, false, null).getQueue();
         } catch (IOException e) {
             LOGGER.error("Can't create video topic");
-            return null;
+            System.exit(0);
         }
-        queuesList.add(queue);
-        return queue;
+        queuesList.add(queueName);
+        return queueName;
     }
 
     @Override

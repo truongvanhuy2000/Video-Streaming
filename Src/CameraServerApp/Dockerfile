@@ -1,8 +1,9 @@
-FROM openjdk:11
+FROM ubuntu
 
 RUN apt update &&\
-    apt install -y pkg-config &&\
-    apt install -y ffmpeg libavformat-dev libavcodec-dev libswscale-dev 
+    apt install -y pkg-config libgtk-3-dev &&\
+    apt install -y ffmpeg libavformat-dev libavcodec-dev libswscale-dev &&\
+    apt install -y default-jre
 
 WORKDIR /app
 COPY . /app

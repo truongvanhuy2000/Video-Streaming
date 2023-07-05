@@ -18,9 +18,9 @@ import java.nio.file.Paths;
 
 
 public class configHandler {
-    public static final InputStream config = helper.getResources("/Config/yaml/config.yaml");
-    public static config CONFIG = new config();
-    public static void loadConfig() throws IOException {
+    private static final InputStream config = helper.getResources("Config/yaml/config.yaml");
+    public static config CONFIG;
+    public static void loadConfig(){
         Constructor constructor = new Constructor(config.class, new LoaderOptions());
         Yaml yaml = new Yaml(constructor);
         CONFIG = yaml.load(config);

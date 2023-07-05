@@ -10,12 +10,9 @@ import java.util.Map;
 public class config {
     private Map<String, String> rabbitmq = new HashMap<>();
     public config(){}
-
-
     public Map<String, String> getRabbitmq() {
         return rabbitmq;
     }
-
     public void setRabbitmq(Map<String, String> rabbitmq) {
         this.rabbitmq = rabbitmq;
     }

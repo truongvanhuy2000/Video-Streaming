@@ -1,6 +1,7 @@
 package com.huy.VideoReader;
 
 import com.huy.App;
+import com.huy.Shared.helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opencv.core.Size;
@@ -13,9 +14,9 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.huy.Shared.helper.LOGGER;
 
 public class cv2Reader {
+    private static final Logger LOGGER = LogManager.getLogger(cv2Reader.class);
     private final VideoCapture cap;
     public cv2Reader(String filename){
         cap = new VideoCapture(filename, Videoio.CAP_FFMPEG);
@@ -32,11 +33,8 @@ public class cv2Reader {
             cap.set(Videoio.CAP_PROP_POS_FRAMES, 0);
             cap.read(frame);
         }
-        Mat resizedFrame = new Mat();
-        Imgproc.resize(frame, resizedFrame, new Size(), 0.5, 0.5, Imgproc.INTER_AREA);
-        return resizedFrame;
+        return frame;
     }
-
     public Map<String, String> getCaptureInformation(String... args){
         Map<String, String> metadata = new HashMap<>();
         String info = "";

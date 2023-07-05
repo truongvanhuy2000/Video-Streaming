@@ -11,8 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class helper {
-    public static final Logger LOGGER = LogManager.getLogger(helper.class);
-    static public byte[] serializeTheImage(Mat frame){
+     static public byte[] serializeTheImage(Mat frame){
         MatOfByte matByte = new MatOfByte();
         Imgcodecs.imencode(".jpg", frame, matByte);
         return matByte.toArray();
@@ -23,8 +22,11 @@ public class helper {
     }
 
     static public InputStream getResources(String path){
-        InputStream resourceAbsolutePath = helper.class.getResourceAsStream(path);
-        assert resourceAbsolutePath != null : "It's null bro";
-        return resourceAbsolutePath;
+        InputStream resourceAbsolutePath = helper.class.getClassLoader().getResourceAsStream(path);
+        if (resourceAbsolutePath == null) {
+            throw new IllegalArgumentException("file not found! " + path);
+        } else {
+            return resourceAbsolutePath;
+        }
     }
 }
